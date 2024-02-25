@@ -7,7 +7,7 @@ import org.springframework.web.reactive.function.client.WebClient;
 
 public class GitHubWebClient implements GitHubClient {
     private static final String DEFAULT_BASE_URL = "https://api.github.com";
-    WebClient webClient;
+    private final WebClient webClient;
 
     private GitHubWebClient(WebClient webClient) {
         this.webClient = webClient;

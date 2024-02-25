@@ -7,7 +7,7 @@ import org.springframework.web.reactive.function.client.WebClient;
 
 public class StackOverflowWebClient implements StackOverflowClient {
     private static final String DEFAULT_BASE_URL = "https://api.stackexchange.com/2.3";
-    WebClient webClient;
+    private final WebClient webClient;
 
     private StackOverflowWebClient(WebClient webClient) {
         this.webClient = webClient;
