@@ -60,7 +60,7 @@ public class GitHubWebClientTest {
     }
 
     @Test
-    @DisplayName("Проверка неверного тела запроса")
+    @DisplayName("Проверка неверного тела ответа")
     public void testWrongBody() {
         String owner = "LalisaSt";
         String repo = "java_course_2";

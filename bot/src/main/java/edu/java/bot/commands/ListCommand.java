@@ -8,10 +8,10 @@ import org.springframework.stereotype.Component;
 
 @Component
 public class ListCommand implements Command {
-    private final static Logger LOGGER = LogManager.getLogger();
-    private final static String NAME = "/list";
-    private final static String DESCRIPTION = "Show a list of tracked links";
-    private final static String MESSAGE = "List of tracked links: ";
+    private static final Logger LOGGER = LogManager.getLogger();
+    private static final String NAME = "/list";
+    private static final String DESCRIPTION = "Show a list of tracked links";
+    private static final String MESSAGE = "List of tracked links: ";
 
     @Override
     public String command() {

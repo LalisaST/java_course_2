@@ -61,7 +61,7 @@ public class StackOverflowWebClientTest {
     }
 
     @Test
-    @DisplayName("Проверка неверного тела запроса")
+    @DisplayName("Проверка неверного тела ответа")
     public void testWrongBody() {
         Long questionId = 123L;
 

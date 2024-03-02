@@ -1,4 +1,4 @@
-package edu.hw1.link;
+package edu.link;
 
 import edu.java.bot.link.GitHubLink;
 import edu.java.bot.link.Link;

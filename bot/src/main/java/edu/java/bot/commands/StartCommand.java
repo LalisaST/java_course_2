@@ -8,10 +8,10 @@ import org.springframework.stereotype.Component;
 
 @Component
 public class StartCommand implements Command {
-    private final static Logger LOGGER = LogManager.getLogger();
-    private final static String NAME = "/start";
-    private final static String DESCRIPTION = "Register a user";
-    private final static String MESSAGE = "Registration was successful";
+    private static final Logger LOGGER = LogManager.getLogger();
+    private static final String NAME = "/start";
+    private static final String DESCRIPTION = "Register a user";
+    private static final String MESSAGE = "Registration was successful";
 
     @Override
     public String command() {

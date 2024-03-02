@@ -1,17 +1,10 @@
-package edu.hw1.commands;
+package edu.commands;
 
 import com.pengrad.telegrambot.model.Chat;
 import com.pengrad.telegrambot.model.Message;
 import com.pengrad.telegrambot.model.Update;
 import com.pengrad.telegrambot.request.SendMessage;
-import edu.java.bot.commands.TrackCommand;
-import edu.java.bot.link.GitHubLink;
-import edu.java.bot.link.Link;
-import edu.java.bot.link.LinkValidator;
-import edu.java.bot.link.StackOverflowLink;
-import java.util.Arrays;
-import java.util.List;
-import org.junit.jupiter.api.BeforeEach;
+import edu.java.bot.commands.StartCommand;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
@@ -20,27 +13,19 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
-public class TrackCommandTest {
-    LinkValidator linkValidator;
-    TrackCommand trackCommand;
-
-    @BeforeEach
-    public void setup() {
-        List<Link> listLinks = Arrays.asList(new StackOverflowLink(), new GitHubLink());
-        linkValidator = new LinkValidator(listLinks);
-        trackCommand = new TrackCommand(linkValidator);
-    }
+public class StartCommandTest {
+    StartCommand startCommand = new StartCommand();
 
     @Test
     @DisplayName("Проверка функции command")
     public void testCommand() {
-        assertEquals("/track", trackCommand.command());
+        assertEquals("/start", startCommand.command());
     }
 
     @Test
     @DisplayName("Проверка функции description")
     public void testDescription() {
-        assertEquals("Start tracking links", trackCommand.description());
+        assertEquals("Register a user", startCommand.description());
     }
 
     @Test
@@ -49,13 +34,12 @@ public class TrackCommandTest {
         Update update = mock(Update.class);
         Message message = mock(Message.class);
         when(message.chat()).thenReturn(mock(Chat.class));
-        when(message.text()).thenReturn("/track https://github.com/LalisaST?tab=repositories");
         when(update.message()).thenReturn(message);
         when(message.chat().id()).thenReturn(123L);
 
-        String MESSAGE = "The link has been added to the list of tracked";
+        String MESSAGE = "Registration was successful";
 
-        SendMessage result = trackCommand.handle(update);
+        SendMessage result = startCommand.handle(update);
         SendMessage sendMessage = new SendMessage(123L, MESSAGE);
 
         assertThat(result).usingRecursiveComparison().isEqualTo(sendMessage);
@@ -64,12 +48,11 @@ public class TrackCommandTest {
     @Test
     @DisplayName("Проверка функции supports")
     public void testSupports() {
-
         Update update = mock(Update.class);
         Message message = mock(Message.class);
         when(update.message()).thenReturn(message);
-        when(message.text()).thenReturn("/track");
+        when(message.text()).thenReturn("/start");
 
-        assertTrue(trackCommand.supports(update));
+        assertTrue(startCommand.supports(update));
     }
 }
