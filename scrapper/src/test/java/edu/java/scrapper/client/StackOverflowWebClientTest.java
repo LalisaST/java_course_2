@@ -41,17 +41,15 @@ public class StackOverflowWebClientTest {
     public void testFetchQuestion() {
         Long questionId = 123L;
         String title = "LalisaSt";
-        String link = "aboba";
         OffsetDateTime lastModified = OffsetDateTime.of(2024, 2, 21, 0, 0, 0, 0, ZoneOffset.UTC);
-        List<StackOverflowResponse.Item> items = List.of(new StackOverflowResponse.Item(title, link, lastModified));
+        List<StackOverflowResponse.Item> items = List.of(new StackOverflowResponse.Item(title, lastModified));
         StackOverflowResponse expectedResponse = new StackOverflowResponse(items);
 
         stubFor(get(urlEqualTo("/questions/" + questionId))
             .willReturn(aResponse()
                 .withStatus(200)
                 .withHeader("Content-Type", MediaType.APPLICATION_JSON_VALUE)
-                .withBody("{\"items\": [{\"title\": \"" + title + "\", \"link\": \"" + link +
-                    "\", \"last_activity_date\": \"" + lastModified + "\"}]}")));
+                .withBody("{\"items\": [{\"title\": \"" + title + "\", \"last_activity_date\": \"" + lastModified + "\"}]}")));
 
         StackOverflowWebClient stackOverflowWebClient =
             StackOverflowWebClient.create("http://localhost:" + wireMockServer.port());

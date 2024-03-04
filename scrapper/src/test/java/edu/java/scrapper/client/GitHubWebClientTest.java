@@ -40,17 +40,16 @@ public class GitHubWebClientTest {
     public void testFetchRepository() {
         String owner = "LalisaSt";
         String repo = "java_course_2";
-        String name = "example";
         String html = "aboba";
         OffsetDateTime offsetDateTime = OffsetDateTime.of(2024, 2, 21, 0, 0, 0, 0, ZoneOffset.UTC);
-        GitHubResponse expectedResponse = new GitHubResponse(name, offsetDateTime, html);
+        GitHubResponse expectedResponse = new GitHubResponse(offsetDateTime, html);
 
         stubFor(get(urlEqualTo("/repos/" + owner + "/" + repo))
             .willReturn(aResponse()
                 .withStatus(200)
                 .withHeader("Content-Type", MediaType.APPLICATION_JSON_VALUE)
                 .withBody(
-                    "{\"name\": \"" + name + "\", \"updated_at\": \"" + offsetDateTime + "\", \"html_url\": \"" + html +
+                    "{\"updated_at\": \"" + offsetDateTime + "\", \"html_url\": \"" + html +
                         "\"}")));
 
         GitHubWebClient gitHubWebClient = GitHubWebClient.create("http://localhost:" + wireMockServer.port());
