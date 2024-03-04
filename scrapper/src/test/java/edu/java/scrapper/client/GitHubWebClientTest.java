@@ -42,7 +42,7 @@ public class GitHubWebClientTest {
         String repo = "java_course_2";
         String html = "aboba";
         OffsetDateTime offsetDateTime = OffsetDateTime.of(2024, 2, 21, 0, 0, 0, 0, ZoneOffset.UTC);
-        GitHubResponse expectedResponse = new GitHubResponse(offsetDateTime, html);
+        GitHubResponse expectedResponse = new GitHubResponse(html, offsetDateTime);
 
         stubFor(get(urlEqualTo("/repos/" + owner + "/" + repo))
             .willReturn(aResponse()
