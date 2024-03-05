@@ -1,4 +1,4 @@
-package edu.java.bot.exeption;
+package edu.java.bot.exception;
 
 public class UpdateAlreadyExistsException extends RuntimeException {
     public UpdateAlreadyExistsException(String message) {

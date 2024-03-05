@@ -1,7 +1,7 @@
 package edu.java.bot.service;
 
 import edu.java.bot.dto.bot.LinkUpdateRequest;
-import edu.java.bot.exeption.UpdateAlreadyExistsException;
+import edu.java.bot.exception.UpdateAlreadyExistsException;
 import java.util.HashSet;
 import java.util.Set;
 import org.springframework.stereotype.Service;

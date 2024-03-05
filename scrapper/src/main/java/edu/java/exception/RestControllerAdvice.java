@@ -1,4 +1,4 @@
-package edu.java.exeption;
+package edu.java.exception;
 
 import edu.java.dto.ApiErrorResponse;
 import java.util.Arrays;

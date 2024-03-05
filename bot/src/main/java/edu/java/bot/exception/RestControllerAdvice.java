@@ -1,4 +1,4 @@
-package edu.java.bot.exeption;
+package edu.java.bot.exception;
 
 import edu.java.bot.dto.ApiErrorResponse;
 import java.util.Arrays;

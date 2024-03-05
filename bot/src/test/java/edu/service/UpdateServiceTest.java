@@ -1,7 +1,7 @@
 package edu.service;
 
 import edu.java.bot.dto.bot.LinkUpdateRequest;
-import edu.java.bot.exeption.UpdateAlreadyExistsException;
+import edu.java.bot.exception.UpdateAlreadyExistsException;
 import edu.java.bot.service.UpdateService;
 import java.net.URI;
 import java.util.List;

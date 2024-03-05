@@ -1,7 +1,7 @@
 package edu.java.scrapper.services;
 
-import edu.java.exeption.NotFoundException;
-import edu.java.exeption.RepeatedRegistrationException;
+import edu.java.exception.NotFoundException;
+import edu.java.exception.RepeatedRegistrationException;
 import edu.java.services.TgChatService;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;

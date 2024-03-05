@@ -6,6 +6,6 @@ import java.util.List;
 
 public record ListLinksResponse(
     @NotEmpty List<LinkResponse> links,
-    @NotNull int size
+    @NotNull Integer size
 ) {
 }

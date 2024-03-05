@@ -1,7 +1,7 @@
 package edu.java.services;
 
-import edu.java.exeption.NotFoundException;
-import edu.java.exeption.RepeatedRegistrationException;
+import edu.java.exception.NotFoundException;
+import edu.java.exception.RepeatedRegistrationException;
 import java.util.HashSet;
 import java.util.Set;
 import org.springframework.stereotype.Service;
