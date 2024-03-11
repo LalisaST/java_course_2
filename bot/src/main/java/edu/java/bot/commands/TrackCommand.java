@@ -10,13 +10,13 @@ import org.springframework.stereotype.Component;
 
 @Component
 public class TrackCommand implements Command {
-    private final static Logger LOGGER = LogManager.getLogger();
-    private final static String NAME = "/track";
-    private final static String DESCRIPTION = "Start tracking links";
-    private final static String MESSAGE = "The link has been added to the list of tracked";
-    private final static String INCORRECT_LINK = "Incorrect link syntax";
-    private final static String UNSUITABLE_HOST = "The transferred site is not supported";
-    private final static String INCORRECT_COMMAND = "Add a link";
+    private static final Logger LOGGER = LogManager.getLogger();
+    private static final String NAME = "/track";
+    private static final String DESCRIPTION = "Start tracking links";
+    private static final String MESSAGE = "The link has been added to the list of tracked";
+    private static final String INCORRECT_LINK = "Incorrect link syntax";
+    private static final String UNSUITABLE_HOST = "The transferred site is not supported";
+    private static final String INCORRECT_COMMAND = "Add a link";
 
     private final LinkValidator linkValidator;
 

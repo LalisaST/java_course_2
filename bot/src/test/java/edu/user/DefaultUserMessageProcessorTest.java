@@ -1,4 +1,4 @@
-package edu.hw1.user;
+package edu.user;
 
 import com.pengrad.telegrambot.model.Chat;
 import com.pengrad.telegrambot.model.Message;
@@ -34,7 +34,7 @@ public class DefaultUserMessageProcessorTest {
 
     @Test
     @DisplayName("Проверка функции process")
-    void start_shouldCreateListCommands() {
+    void checkingProcessFunction() {
         Update update = mock(Update.class);
         Message message = mock(Message.class);
         when(message.chat()).thenReturn(mock(Chat.class));

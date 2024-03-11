@@ -6,10 +6,10 @@ import org.springframework.stereotype.Component;
 
 @Component
 public class UntrackCommand implements Command {
-    private final static String NAME = "/untrack";
-    private final static String DESCRIPTION = "Stop tracking the link";
-    private final static String MESSAGE = "The link has been removed from the list of tracked";
-    private final static String INCORRECT_COMMAND = "Add a link";
+    private static final String NAME = "/untrack";
+    private static final String DESCRIPTION = "Stop tracking the link";
+    private static final String MESSAGE = "The link has been removed from the list of tracked";
+    private static final String INCORRECT_COMMAND = "Add a link";
 
     @Override
     public String command() {

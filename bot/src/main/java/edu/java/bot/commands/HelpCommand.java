@@ -6,9 +6,9 @@ import org.springframework.stereotype.Component;
 
 @Component
 public class HelpCommand implements Command {
-    private final static String NAME = "/help";
-    private final static String DESCRIPTION = "Display a window with commands";
-    private final static String MESSAGE = """
+    private static final String NAME = "/help";
+    private static final String DESCRIPTION = "Display a window with commands";
+    private static final String MESSAGE = """
             /start - register a user
             /help - display a window with commands
             /track "link" - start tracking links
