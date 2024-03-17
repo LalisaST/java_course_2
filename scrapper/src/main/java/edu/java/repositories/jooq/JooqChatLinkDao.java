@@ -7,8 +7,8 @@ import java.util.Optional;
 import lombok.RequiredArgsConstructor;
 import org.jooq.DSLContext;
 import org.springframework.stereotype.Repository;
-import static edu.java.domain.jooq.tables.ChatLink.CHAT_LINK;
-import static edu.java.domain.jooq.tables.Link.LINK;
+import static edu.java.domain.jooq.Tables.CHAT_LINK;
+import static edu.java.domain.jooq.Tables.LINK;
 
 @Repository
 @RequiredArgsConstructor
