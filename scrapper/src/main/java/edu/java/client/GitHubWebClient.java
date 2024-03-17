@@ -1,6 +1,8 @@
 package edu.java.client;
 
-import edu.java.dto.GitHubResponse;
+import edu.java.dto.github.GitHubCommit;
+import edu.java.dto.github.GitHubResponse;
+import java.util.List;
 import java.util.Objects;
 import org.jetbrains.annotations.NotNull;
 import org.springframework.web.reactive.function.client.WebClient;
@@ -29,6 +31,17 @@ public class GitHubWebClient implements GitHubClient {
             .uri("/repos/{owner}/{repo}", owner, repo)
             .retrieve()
             .bodyToMono(GitHubResponse.class)
+            .block();
+    }
+
+    @Override
+    public List<GitHubCommit> fetchCommits(@NotNull String owner, @NotNull String repo) {
+        return webClient
+            .get()
+            .uri("/repos/{owner}/{repo}/commits", owner, repo)
+            .retrieve()
+            .bodyToFlux(GitHubCommit.class)
+            .collectList()
             .block();
     }
 }

@@ -5,6 +5,7 @@ import com.github.tomakehurst.wiremock.client.WireMock;
 import com.github.tomakehurst.wiremock.core.WireMockConfiguration;
 import edu.java.client.GitHubWebClient;
 import edu.java.model.Link;
+import edu.java.model.Type;
 import edu.java.scheduler.linkhandlers.GitHubLinkHandler;
 import edu.java.scheduler.linkhandlers.HandlerResult;
 import java.net.URI;
@@ -44,9 +45,9 @@ public class GitHubLinkHandlerTest {
     @DisplayName("Неверный формат ссылки")
     void invalidLinkFormat() {
         OffsetDateTime time = OffsetDateTime.now();
-        Link link = new Link(1L, URI.create("url"), time, time);
+        Link link = new Link(1L, URI.create("url"), time, time, Type.GITHUB,0, 0, 0);
         assertThat(gitHubLinkHandler.updateLink(link))
-            .isEqualTo(new HandlerResult(false, "The link does not match the format", null));
+            .isEqualTo(new HandlerResult(false, "The link does not match the format", null, 0,0,0));
     }
 
     @Test
@@ -55,7 +56,7 @@ public class GitHubLinkHandlerTest {
         OffsetDateTime time = OffsetDateTime.now();
         Link link = new Link(1L,
             URI.create("https://github.com/LalisaST/java_course_2"),
-            time, time
+            time, time, Type.GITHUB,0, 0, 0
         );
 
         OffsetDateTime lastModified = OffsetDateTime.of(2024, 4, 21, 0, 0, 0, 0, ZoneOffset.UTC);
@@ -67,8 +68,14 @@ public class GitHubLinkHandlerTest {
                     "{\"updated_at\": \"" + lastModified + "\", \"html_url\": \"" + link.url() +
                     "\"}")));
 
+        stubFor(get(urlEqualTo("/repos/" + "LalisaST" + "/" + "java_course_2/commits"))
+            .willReturn(aResponse()
+                .withStatus(200)
+                .withHeader("Content-Type", MediaType.APPLICATION_JSON_VALUE)
+                .withBody("[]")));
+
         assertThat(gitHubLinkHandler.updateLink(link))
-            .isEqualTo(new HandlerResult(true, "Updated at 2024-04-21, 00:00:00", lastModified));
+            .isEqualTo(new HandlerResult(true, "Updated at 2024-04-21, 00:00:00", lastModified,0,0,0));
     }
 
     @Test
@@ -77,7 +84,7 @@ public class GitHubLinkHandlerTest {
         OffsetDateTime lastModified = OffsetDateTime.of(2024, 4, 21, 0, 0, 0, 0, ZoneOffset.UTC);
         Link link = new Link(1L,
             URI.create("https://github.com/LalisaST/java_course_2"),
-            lastModified, lastModified
+            lastModified, lastModified, Type.GITHUB,0, 0, 0
         );
 
         stubFor(get(urlEqualTo("/repos/" + "LalisaST" + "/" + "java_course_2"))

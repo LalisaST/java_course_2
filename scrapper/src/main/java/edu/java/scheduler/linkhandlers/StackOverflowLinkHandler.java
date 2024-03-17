@@ -1,7 +1,9 @@
 package edu.java.scheduler.linkhandlers;
 
 import edu.java.client.StackOverflowWebClient;
-import edu.java.dto.StackOverflowResponse;
+import edu.java.dto.stackoverflow.StackOverflowAnswer;
+import edu.java.dto.stackoverflow.StackOverflowComment;
+import edu.java.dto.stackoverflow.StackOverflowResponse;
 import edu.java.model.Link;
 import java.net.URI;
 import java.time.OffsetDateTime;
@@ -23,20 +25,44 @@ public class StackOverflowLinkHandler implements LinkHandler {
         String[] data = link.url().toString().split("/");
 
         if (data.length < EXPECTED_LINK_LENGTH) {
-            return new HandlerResult(false, "The link does not match the format", null);
+            return new HandlerResult(false, "The link does not match the format", null, 0, 0, 0);
         }
 
         long questionID = Long.parseLong(data[QUESTION_ID]);
 
-        StackOverflowResponse stackOverflowResponse =
-            stackOverflowWebClient.fetchQuestion((questionID));
+        StackOverflowResponse stackOverflowResponse = stackOverflowWebClient.fetchQuestion((questionID));
+        StackOverflowAnswer stackOverflowAnswer = stackOverflowWebClient.fetchAnswers(questionID);
+        StackOverflowComment stackOverflowComment = stackOverflowWebClient.fetchComments(questionID);
 
+        StringBuilder description = new StringBuilder();
+        Integer answerCount = link.answerCount();
+        Integer commentCount = link.commentCount();
+
+        OffsetDateTime time = link.lastUpdate();
         OffsetDateTime timeUpdate = stackOverflowResponse.items().get(0).lastActivity();
-        if (!timeUpdate.equals(link.lastUpdate())) {
-            return new HandlerResult(true, "Updated at " + timeUpdate.format(DTF), timeUpdate);
+
+        if (!timeUpdate.equals(time)) {
+            description.append("Updated at ").append(timeUpdate.format(DTF));
+            time = timeUpdate;
         }
 
-        return new HandlerResult(false, "Not updated", OffsetDateTime.now());
+        if (stackOverflowAnswer.items().size() != answerCount) {
+            description.append(", ").append("count new answers: ")
+                .append(stackOverflowAnswer.items().size() - answerCount);
+            answerCount = stackOverflowAnswer.items().size();
+        }
+
+        if (stackOverflowComment.items().size() != commentCount) {
+            description.append(", ").append("count new comments: ")
+                .append(stackOverflowComment.items().size() - commentCount);
+            commentCount = stackOverflowComment.items().size();
+        }
+
+        if (description.isEmpty()) {
+            return new HandlerResult(false, "Not updated", OffsetDateTime.now(), 0, 0, 0);
+        }
+
+        return new HandlerResult(true, description.toString(), time, 0, answerCount, commentCount);
     }
 
     @Override

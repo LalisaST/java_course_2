@@ -5,6 +5,7 @@ import com.github.tomakehurst.wiremock.client.WireMock;
 import com.github.tomakehurst.wiremock.core.WireMockConfiguration;
 import edu.java.client.StackOverflowWebClient;
 import edu.java.model.Link;
+import edu.java.model.Type;
 import edu.java.scheduler.linkhandlers.HandlerResult;
 import edu.java.scheduler.linkhandlers.StackOverflowLinkHandler;
 import java.net.URI;
@@ -44,9 +45,9 @@ public class StackOverflowLinkHandlerTest {
     @DisplayName("Неверный формат ссылки")
     void invalidLinkFormat() {
         OffsetDateTime time = OffsetDateTime.now();
-        Link link = new Link(1L, URI.create("url"), time, time);
+        Link link = new Link(1L, URI.create("url"), time, time, Type.GITHUB,0, 0, 0);
         assertThat(stackOverflowLinkHandler.updateLink(link))
-            .isEqualTo(new HandlerResult(false, "The link does not match the format", null));
+            .isEqualTo(new HandlerResult(false, "The link does not match the format", null, 0,0,0));
     }
 
     @Test
@@ -55,7 +56,7 @@ public class StackOverflowLinkHandlerTest {
         OffsetDateTime time = OffsetDateTime.now();
         Link link = new Link(1L,
             URI.create("https://stackoverflow.com/questions/2003505/how-do-i-delete-a-git-branch-locally-and-remotely"),
-            time, time
+            time, time, Type.GITHUB,0, 0, 0
         );
 
         OffsetDateTime lastModified = OffsetDateTime.of(2024, 4, 21, 0, 0, 0, 0, ZoneOffset.UTC);
@@ -66,8 +67,21 @@ public class StackOverflowLinkHandlerTest {
                 .withBody(
                     "{\"items\": [{\"link\": \"" + link.url() + "\", \"last_activity_date\": \"" + lastModified + "\"}]}")));
 
+        stubFor(get(urlEqualTo("/questions/" + 2003505 + "/answers"))
+            .willReturn(aResponse()
+                .withStatus(200)
+                .withHeader("Content-Type", MediaType.APPLICATION_JSON_VALUE)
+                .withBody("{\"items\": [{}]}")));
+
+        stubFor(get(urlEqualTo("/questions/" + 2003505 + "/comments"))
+            .willReturn(aResponse()
+                .withStatus(200)
+                .withHeader("Content-Type", MediaType.APPLICATION_JSON_VALUE)
+                .withBody("{\"items\": []}")));
+
+
         assertThat(stackOverflowLinkHandler.updateLink(link))
-            .isEqualTo(new HandlerResult(true, "Updated at 2024-04-21, 00:00:00", lastModified));
+            .isEqualTo(new HandlerResult(true, "Updated at 2024-04-21, 00:00:00, count new answers: 1", lastModified, 0,1,0));
     }
 
     @Test
@@ -76,7 +90,7 @@ public class StackOverflowLinkHandlerTest {
         OffsetDateTime lastModified = OffsetDateTime.of(2024, 4, 21, 0, 0, 0, 0, ZoneOffset.UTC);
         Link link = new Link(1L,
             URI.create("https://stackoverflow.com/questions/2003505/how-do-i-delete-a-git-branch-locally-and-remotely"),
-            lastModified, lastModified
+            lastModified, lastModified, Type.GITHUB,0, 0, 0
         );
 
         stubFor(get(urlEqualTo("/questions/" + 2003505))
@@ -85,6 +99,17 @@ public class StackOverflowLinkHandlerTest {
                 .withHeader("Content-Type", MediaType.APPLICATION_JSON_VALUE)
                 .withBody(
                     "{\"items\": [{\"link\": \"" + link.url() + "\", \"last_activity_date\": \"" + lastModified + "\"}]}")));
+        stubFor(get(urlEqualTo("/questions/" + 2003505 + "/answers"))
+            .willReturn(aResponse()
+                .withStatus(200)
+                .withHeader("Content-Type", MediaType.APPLICATION_JSON_VALUE)
+                .withBody("{\"items\": []}")));
+
+        stubFor(get(urlEqualTo("/questions/" + 2003505 + "/comments"))
+            .willReturn(aResponse()
+                .withStatus(200)
+                .withHeader("Content-Type", MediaType.APPLICATION_JSON_VALUE)
+                .withBody("{\"items\": []}")));
 
         assertThat(stackOverflowLinkHandler.updateLink(link).description().equals("Not updated")).isTrue();
     }

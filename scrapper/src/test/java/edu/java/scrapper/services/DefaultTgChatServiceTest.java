@@ -5,7 +5,7 @@ import edu.java.exception.RepeatedRegistrationException;
 import edu.java.model.Chat;
 import edu.java.repositories.jdbc.JdbcChatDao;
 import edu.java.repositories.jdbc.JdbcChatLinkDao;
-import edu.java.services.jdbc.JdbcTgChatService;
+import edu.java.services.DefaultTgChatService;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -19,20 +19,20 @@ import static org.junit.jupiter.api.Assertions.assertDoesNotThrow;
 import static org.mockito.Mockito.when;
 
 @ExtendWith(MockitoExtension.class)
-public class JdbcTgChatServiceTest {
+public class DefaultTgChatServiceTest {
     @Mock
     private JdbcChatDao jdbcChatDao;
     @Mock
     private JdbcChatLinkDao jdbcChatLinkDao;
 
-    private JdbcTgChatService jdbcTgChatService;
+    private DefaultTgChatService defaultTgChatService;
     private final OffsetDateTime time = OffsetDateTime.now();
     private final Long id = 0L;
     private final Chat chat = new Chat(id, time);
 
     @BeforeEach
     public void setUp() {
-        jdbcTgChatService = new JdbcTgChatService(jdbcChatDao, jdbcChatLinkDao);
+        defaultTgChatService = new DefaultTgChatService(jdbcChatDao, jdbcChatLinkDao);
     }
 
     @Test
@@ -40,7 +40,7 @@ public class JdbcTgChatServiceTest {
     public void checkingChatRegistration() {
         when(jdbcChatDao.findAll()).thenReturn(List.of());
         assertDoesNotThrow(() ->
-            jdbcTgChatService.registerChat(id));
+            defaultTgChatService.registerChat(id));
     }
 
     @Test
@@ -48,7 +48,7 @@ public class JdbcTgChatServiceTest {
     public void checkingRepeatedRegistrationChat() {
         when(jdbcChatDao.findAll()).thenReturn(List.of(chat));
 
-        assertThatThrownBy(() -> jdbcTgChatService.registerChat(id)).isInstanceOf(RepeatedRegistrationException.class);
+        assertThatThrownBy(() -> defaultTgChatService.registerChat(id)).isInstanceOf(RepeatedRegistrationException.class);
     }
 
     @Test
@@ -56,7 +56,7 @@ public class JdbcTgChatServiceTest {
     public void checkingChatDeletion() {
         when(jdbcChatDao.findAll()).thenReturn(List.of(chat));
 
-        assertDoesNotThrow(() -> jdbcTgChatService.deleteChat(id));
+        assertDoesNotThrow(() -> defaultTgChatService.deleteChat(id));
     }
 
     @Test
@@ -64,6 +64,6 @@ public class JdbcTgChatServiceTest {
     public void deletingNonexistentChat() {
         when(jdbcChatDao.findAll()).thenReturn(List.of());
 
-        assertThatThrownBy(() -> jdbcTgChatService.deleteChat(id)).isInstanceOf(NotFoundException.class);
+        assertThatThrownBy(() -> defaultTgChatService.deleteChat(id)).isInstanceOf(NotFoundException.class);
     }
 }

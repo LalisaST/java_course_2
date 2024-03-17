@@ -4,9 +4,11 @@ import com.github.tomakehurst.wiremock.WireMockServer;
 import com.github.tomakehurst.wiremock.client.WireMock;
 import com.github.tomakehurst.wiremock.core.WireMockConfiguration;
 import edu.java.client.GitHubWebClient;
-import edu.java.dto.GitHubResponse;
+import edu.java.dto.github.GitHubCommit;
+import edu.java.dto.github.GitHubResponse;
 import java.time.OffsetDateTime;
 import java.time.ZoneOffset;
+import java.util.List;
 import org.junit.jupiter.api.AfterAll;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.DisplayName;
@@ -54,6 +56,27 @@ public class GitHubWebClientTest {
 
         GitHubWebClient gitHubWebClient = GitHubWebClient.create("http://localhost:" + wireMockServer.port());
         GitHubResponse actualResponse = gitHubWebClient.fetchRepository(owner, repo);
+
+        assertEquals(expectedResponse, actualResponse);
+    }
+
+    @Test
+    @DisplayName("Проверка функции fetchCommits")
+    public void testFetchCommits() {
+        String owner = "LalisaSt";
+        String repo = "java_course_2";
+        GitHubCommit.Commit commit = new GitHubCommit.Commit();
+        List<GitHubCommit> expectedResponse = List.of(new GitHubCommit(commit));
+
+        stubFor(get(urlEqualTo("/repos/" + owner + "/" + repo + "/commits"))
+            .willReturn(aResponse()
+                .withStatus(200)
+                .withHeader("Content-Type", MediaType.APPLICATION_JSON_VALUE)
+                .withBody(
+                    "[{\"commit\": {}}]")));
+
+        GitHubWebClient gitHubWebClient = GitHubWebClient.create("http://localhost:" + wireMockServer.port());
+        List<GitHubCommit> actualResponse = gitHubWebClient.fetchCommits(owner, repo);
 
         assertEquals(expectedResponse, actualResponse);
     }

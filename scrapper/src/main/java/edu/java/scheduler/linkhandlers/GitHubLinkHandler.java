@@ -1,11 +1,13 @@
 package edu.java.scheduler.linkhandlers;
 
 import edu.java.client.GitHubWebClient;
-import edu.java.dto.GitHubResponse;
+import edu.java.dto.github.GitHubCommit;
+import edu.java.dto.github.GitHubResponse;
 import edu.java.model.Link;
 import java.net.URI;
 import java.time.OffsetDateTime;
 import java.time.format.DateTimeFormatter;
+import java.util.List;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
 
@@ -24,20 +26,38 @@ public class GitHubLinkHandler implements LinkHandler {
         String[] data = link.url().toString().split("/");
 
         if (data.length < EXPECTED_LINK_LENGTH) {
-            return new HandlerResult(false, "The link does not match the format", null);
+            return new HandlerResult(false, "The link does not match the format",
+                null, 0, 0, 0
+            );
         }
 
         String owner = data[OWNER];
         String repo = data[REPO];
 
         GitHubResponse gitHubResponse = gitHubWebClient.fetchRepository(owner, repo);
+        List<GitHubCommit> gitHubCommit = gitHubWebClient.fetchCommits(owner, repo);
 
+        StringBuilder description = new StringBuilder();
+        Integer size = link.commitCount();
+
+        OffsetDateTime time = link.lastUpdate();
         OffsetDateTime timeUpdate = gitHubResponse.update();
-        if (!timeUpdate.equals(link.lastUpdate())) {
-            return new HandlerResult(true, "Updated at " + timeUpdate.format(DTF), timeUpdate);
+
+        if (!timeUpdate.equals(time)) {
+            description.append("Updated at ").append(timeUpdate.format(DTF));
+            time = timeUpdate;
         }
 
-        return new HandlerResult(false, "Not updated", OffsetDateTime.now());
+        if (gitHubCommit.size() != size) {
+            description.append(", ").append("count new commits: ").append(gitHubCommit.size() - size);
+            size = gitHubCommit.size();
+        }
+
+        if (description.isEmpty()) {
+            return new HandlerResult(false, "Not updated", OffsetDateTime.now(), 0, 0, 0);
+        }
+
+        return new HandlerResult(true, description.toString(), time, size, 0, 0);
     }
 
     @Override

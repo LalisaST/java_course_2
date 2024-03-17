@@ -3,12 +3,13 @@ package edu.java.scrapper.scheduler.linkupdaters;
 import edu.java.client.BotWebClient;
 import edu.java.configuration.ApplicationConfig;
 import edu.java.model.Link;
+import edu.java.model.Type;
 import edu.java.scheduler.LinkUpdater;
 import edu.java.scheduler.linkhandlers.GitHubLinkHandler;
 import edu.java.scheduler.linkhandlers.HandlerResult;
-import edu.java.scheduler.linkupdaters.JdbcLinkUpdater;
-import edu.java.services.jdbc.JdbcLinkService;
-import edu.java.services.jdbc.JdbcTgChatService;
+import edu.java.scheduler.linkupdaters.DefaultLinkUpdater;
+import edu.java.services.DefaultLinkService;
+import edu.java.services.DefaultTgChatService;
 import java.net.URI;
 import java.time.Duration;
 import java.time.OffsetDateTime;
@@ -24,11 +25,11 @@ import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
 @ExtendWith(MockitoExtension.class)
-public class JdbcLinkUpdaterTest {
+public class DefaultLinkUpdaterTest {
     @Mock
-    private JdbcLinkService jdbcLinkService;
+    private DefaultLinkService defaultLinkService;
     @Mock
-    private JdbcTgChatService jdbcTgChatService;
+    private DefaultTgChatService defaultTgChatService;
     @Mock
     private ApplicationConfig applicationConfig;
     @Mock
@@ -44,21 +45,31 @@ public class JdbcLinkUpdaterTest {
 
         OffsetDateTime offsetDateTime = OffsetDateTime.now();
         List<Link> links = List.of(
-            new Link(1L, URI.create("https://github.com/LalisaST/java_course_2"), offsetDateTime, offsetDateTime));
+            new Link(
+                1L,
+                URI.create("https://github.com/LalisaST/java_course_2"),
+                offsetDateTime,
+                offsetDateTime,
+                Type.GITHUB,
+                0,
+                0,
+                0
+            ));
 
-        when(jdbcLinkService.searchForUpdateLinks(
+        when(defaultLinkService.searchForUpdateLinks(
             applicationConfig.scheduler().forceCheckDelay().getSeconds())).thenReturn(links);
         when(gitHubLinkHandler.supports(URI.create("https://github.com/LalisaST/java_course_2"))).thenReturn(true);
 
         when(gitHubLinkHandler.updateLink(links.getFirst())).thenReturn(new HandlerResult(
             true,
             "updated",
-            OffsetDateTime.now()
+            OffsetDateTime.now(), 0,0,0
         ));
 
-        LinkUpdater linkUpdater = new JdbcLinkUpdater(applicationConfig,
-            jdbcLinkService,
-            jdbcTgChatService,
+        LinkUpdater linkUpdater = new DefaultLinkUpdater(
+            applicationConfig,
+            defaultLinkService,
+            defaultTgChatService,
             List.of(gitHubLinkHandler),
             botWebClient
         );
