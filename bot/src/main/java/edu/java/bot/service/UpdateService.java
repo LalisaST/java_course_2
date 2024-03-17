@@ -1,18 +1,22 @@
 package edu.java.bot.service;
 
+import com.pengrad.telegrambot.request.SendMessage;
+import edu.java.bot.Bot;
 import edu.java.bot.dto.bot.LinkUpdateRequest;
-import edu.java.bot.exception.UpdateAlreadyExistsException;
-import java.util.HashSet;
-import java.util.Set;
+import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
 @Service
+@RequiredArgsConstructor
 public class UpdateService {
-    private final Set<LinkUpdateRequest> updates = new HashSet<>();
+    private final Bot bot;
 
-    public void addUpdate(LinkUpdateRequest linkUpdateRequest) {
-        if (!updates.add(linkUpdateRequest)) {
-            throw new UpdateAlreadyExistsException("Update already exists");
+    public void sendUpdate(LinkUpdateRequest linkUpdateRequest) {
+
+        for (Long chatIds : linkUpdateRequest.tgChatIds()) {
+            SendMessage message =
+                new SendMessage(chatIds, linkUpdateRequest.url() + " " + linkUpdateRequest.description());
+            bot.execute(message);
         }
     }
 }

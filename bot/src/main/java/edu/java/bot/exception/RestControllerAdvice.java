@@ -22,15 +22,6 @@ public class RestControllerAdvice {
         );
     }
 
-    @ExceptionHandler
-    @ResponseStatus(HttpStatus.BAD_REQUEST)
-    public ApiErrorResponse handleUpdateAlreadyExists(UpdateAlreadyExistsException e) {
-        return createApiErrorResponse(
-            e,
-            "Invalid request parameters"
-        );
-    }
-
     private ApiErrorResponse createApiErrorResponse(Exception e, String description) {
         return new ApiErrorResponse(
             description,

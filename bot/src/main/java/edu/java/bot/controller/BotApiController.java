@@ -19,7 +19,7 @@ public class BotApiController {
 
     @PostMapping
     public void update(@RequestBody @Valid LinkUpdateRequest linkUpdateRequest) {
-        updateService.addUpdate(linkUpdateRequest);
+        updateService.sendUpdate(linkUpdateRequest);
         log.info("The update has been processed");
     }
 }

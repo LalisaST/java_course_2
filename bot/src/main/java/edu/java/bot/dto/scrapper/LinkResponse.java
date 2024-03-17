@@ -1,7 +1,7 @@
 package edu.java.bot.dto.scrapper;
 
+import jakarta.validation.constraints.NotNull;
 import java.net.URI;
-import org.jetbrains.annotations.NotNull;
 
 public record LinkResponse(
     @NotNull Long id,
