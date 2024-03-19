@@ -1,12 +1,12 @@
-package edu.java.scheduler.linkupdaters;
+package edu.java.scheduler.service.jdbc;
 
 import edu.java.client.BotWebClient;
 import edu.java.configuration.ApplicationConfig;
 import edu.java.dto.bot.LinkUpdateRequest;
 import edu.java.model.Link;
-import edu.java.scheduler.LinkUpdater;
-import edu.java.scheduler.linkhandlers.HandlerResult;
-import edu.java.scheduler.linkhandlers.LinkHandler;
+import edu.java.scheduler.service.LinkUpdater;
+import edu.java.scheduler.linkhandler.HandlerResult;
+import edu.java.scheduler.linkhandler.LinkHandler;
 import edu.java.services.jdbc.JdbcLinkService;
 import edu.java.services.jdbc.JdbcTgChatService;
 import java.util.List;

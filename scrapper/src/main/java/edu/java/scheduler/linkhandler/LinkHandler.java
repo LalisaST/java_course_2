@@ -1,4 +1,4 @@
-package edu.java.scheduler.linkhandlers;
+package edu.java.scheduler.linkhandler;
 
 import edu.java.model.Link;
 import java.net.URI;
