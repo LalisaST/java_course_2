@@ -5,11 +5,11 @@ import edu.java.dto.stackoverflow.StackOverflowAnswer;
 import edu.java.dto.stackoverflow.StackOverflowComment;
 import edu.java.dto.stackoverflow.StackOverflowResponse;
 import edu.java.model.Link;
+import edu.java.scheduler.linkhandler.HandlerResult;
+import edu.java.scheduler.linkhandler.LinkHandler;
 import java.net.URI;
 import java.time.OffsetDateTime;
 import java.time.format.DateTimeFormatter;
-import edu.java.scheduler.linkhandler.HandlerResult;
-import edu.java.scheduler.linkhandler.LinkHandler;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
 
