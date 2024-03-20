@@ -4,7 +4,9 @@ import com.github.tomakehurst.wiremock.WireMockServer;
 import com.github.tomakehurst.wiremock.client.WireMock;
 import com.github.tomakehurst.wiremock.core.WireMockConfiguration;
 import edu.java.client.StackOverflowWebClient;
-import edu.java.dto.StackOverflowResponse;
+import edu.java.dto.stackoverflow.StackOverflowAnswer;
+import edu.java.dto.stackoverflow.StackOverflowComment;
+import edu.java.dto.stackoverflow.StackOverflowResponse;
 import java.time.OffsetDateTime;
 import java.time.ZoneOffset;
 import java.util.List;
@@ -73,5 +75,45 @@ public class StackOverflowWebClientTest {
             StackOverflowWebClient.create("http://localhost:" + wireMockServer.port());
 
         assertThatThrownBy(() -> stackOverflowWebClient.fetchQuestion(questionId)).isInstanceOf(DecodingException.class);
+    }
+
+    @Test
+    @DisplayName("Проверка функции fetchAnswers")
+    public void testFetchAnswers() {
+        Long questionId = 123L;
+        List<StackOverflowAnswer.Item> items = List.of();
+        StackOverflowAnswer expectedResponse = new StackOverflowAnswer(items);
+
+        stubFor(get(urlEqualTo("/questions/" + questionId + "/answers"))
+            .willReturn(aResponse()
+                .withStatus(200)
+                .withHeader("Content-Type", MediaType.APPLICATION_JSON_VALUE)
+                .withBody("{\"items\": []}")));
+
+        StackOverflowWebClient stackOverflowWebClient =
+            StackOverflowWebClient.create("http://localhost:" + wireMockServer.port());
+        StackOverflowAnswer actualResponse = stackOverflowWebClient.fetchAnswers(questionId);
+
+        assertEquals(expectedResponse, actualResponse);
+    }
+
+    @Test
+    @DisplayName("Проверка функции fetchComments")
+    public void testFetchComments() {
+        Long questionId = 123L;
+        List<StackOverflowComment.Item> items = List.of();
+        StackOverflowComment expectedResponse = new StackOverflowComment(items);
+
+        stubFor(get(urlEqualTo("/questions/" + questionId + "/comments"))
+            .willReturn(aResponse()
+                .withStatus(200)
+                .withHeader("Content-Type", MediaType.APPLICATION_JSON_VALUE)
+                .withBody("{\"items\": []}")));
+
+        StackOverflowWebClient stackOverflowWebClient =
+            StackOverflowWebClient.create("http://localhost:" + wireMockServer.port());
+        StackOverflowComment actualResponse = stackOverflowWebClient.fetchComments(questionId);
+
+        assertEquals(expectedResponse, actualResponse);
     }
 }

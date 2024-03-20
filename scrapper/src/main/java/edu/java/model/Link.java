@@ -9,6 +9,10 @@ public record Link(
     @NotNull Long id,
     @NotBlank URI url,
     @NotNull OffsetDateTime lastUpdate,
-    @NotNull OffsetDateTime lastCheck
+    @NotNull OffsetDateTime lastCheck,
+    @NotNull Type type,
+    Integer commitCount,
+    Integer answerCount,
+    Integer commentCount
 ) {
 }

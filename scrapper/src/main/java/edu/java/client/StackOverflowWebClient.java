@@ -1,6 +1,8 @@
 package edu.java.client;
 
-import edu.java.dto.StackOverflowResponse;
+import edu.java.dto.stackoverflow.StackOverflowAnswer;
+import edu.java.dto.stackoverflow.StackOverflowComment;
+import edu.java.dto.stackoverflow.StackOverflowResponse;
 import java.util.Objects;
 import org.jetbrains.annotations.NotNull;
 import org.springframework.web.reactive.function.client.WebClient;
@@ -29,6 +31,26 @@ public class StackOverflowWebClient implements StackOverflowClient {
             .uri("/questions/{questionId}", questionId)
             .retrieve()
             .bodyToMono(StackOverflowResponse.class)
+            .block();
+    }
+
+    @Override
+    public StackOverflowAnswer fetchAnswers(@NotNull Long questionId) {
+        return webClient
+            .get()
+            .uri("/questions/{questionId}/answers", questionId)
+            .retrieve()
+            .bodyToMono(StackOverflowAnswer.class)
+            .block();
+    }
+
+    @Override
+    public StackOverflowComment fetchComments(@NotNull Long questionId) {
+        return webClient
+            .get()
+            .uri("/questions/{questionId}/comments", questionId)
+            .retrieve()
+            .bodyToMono(StackOverflowComment.class)
             .block();
     }
 }
