@@ -2,9 +2,9 @@ package edu.java.bot.dto.bot;
 
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotEmpty;
+import jakarta.validation.constraints.NotNull;
 import java.net.URI;
 import java.util.List;
-import org.jetbrains.annotations.NotNull;
 
 public record LinkUpdateRequest(
     @NotNull Long id,
