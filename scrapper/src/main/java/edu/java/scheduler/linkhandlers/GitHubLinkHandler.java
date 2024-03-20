@@ -1,24 +1,23 @@
-package edu.java.scheduler.linkhandler.impl;
+package edu.java.scheduler.linkhandlers;
 
-import edu.java.client.StackOverflowWebClient;
-import edu.java.dto.StackOverflowResponse;
+import edu.java.client.GitHubWebClient;
+import edu.java.dto.GitHubResponse;
 import edu.java.model.Link;
 import java.net.URI;
 import java.time.OffsetDateTime;
 import java.time.format.DateTimeFormatter;
-import edu.java.scheduler.linkhandler.HandlerResult;
-import edu.java.scheduler.linkhandler.LinkHandler;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
 
 @Component
 @RequiredArgsConstructor
-public class StackOverflowLinkHandler implements LinkHandler {
+public class GitHubLinkHandler implements LinkHandler {
     private static final DateTimeFormatter DTF = DateTimeFormatter.ofPattern("yyyy-MM-dd, HH:mm:ss");
-    private final static String HOST_NAME = "stackoverflow.com";
-    private final static int QUESTION_ID = 4;
+    private final static String GITHUB_HOST = "github.com";
+    private final static int OWNER = 3;
+    private final static int REPO = 4;
     private final static int EXPECTED_LINK_LENGTH = 5;
-    private final StackOverflowWebClient stackOverflowWebClient;
+    private final GitHubWebClient gitHubWebClient;
 
     @Override
     public HandlerResult updateLink(Link link) {
@@ -28,12 +27,12 @@ public class StackOverflowLinkHandler implements LinkHandler {
             return new HandlerResult(false, "The link does not match the format", null);
         }
 
-        long questionID = Long.parseLong(data[QUESTION_ID]);
+        String owner = data[OWNER];
+        String repo = data[REPO];
 
-        StackOverflowResponse stackOverflowResponse =
-            stackOverflowWebClient.fetchQuestion((questionID));
+        GitHubResponse gitHubResponse = gitHubWebClient.fetchRepository(owner, repo);
 
-        OffsetDateTime timeUpdate = stackOverflowResponse.items().get(0).lastActivity();
+        OffsetDateTime timeUpdate = gitHubResponse.update();
         if (!timeUpdate.equals(link.lastUpdate())) {
             return new HandlerResult(true, "Updated at " + timeUpdate.format(DTF), timeUpdate);
         }
@@ -43,6 +42,6 @@ public class StackOverflowLinkHandler implements LinkHandler {
 
     @Override
     public boolean supports(URI url) {
-        return url.getHost().equals(HOST_NAME);
+        return url.getHost().equals(GITHUB_HOST);
     }
 }

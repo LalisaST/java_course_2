@@ -1,4 +1,4 @@
-package edu.java.scheduler.linkhandler;
+package edu.java.scheduler.linkhandlers;
 
 import java.time.OffsetDateTime;
 

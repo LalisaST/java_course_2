@@ -1,4 +1,4 @@
-package edu.java.scheduler.service;
+package edu.java.scheduler;
 
 public interface LinkUpdater {
     void update();
