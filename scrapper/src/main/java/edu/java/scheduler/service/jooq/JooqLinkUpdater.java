@@ -1,8 +1,9 @@
-package edu.java.scheduler.linkupdaters;
+package edu.java.scheduler.service.jooq;
 
 import edu.java.client.BotWebClient;
 import edu.java.configuration.ApplicationConfig;
-import edu.java.scheduler.linkhandlers.LinkHandler;
+import edu.java.scheduler.linkhandler.LinkHandler;
+import edu.java.scheduler.service.DefaultLinkUpdater;
 import edu.java.services.jooq.JooqLinkService;
 import edu.java.services.jooq.JooqTgChatService;
 import java.util.List;

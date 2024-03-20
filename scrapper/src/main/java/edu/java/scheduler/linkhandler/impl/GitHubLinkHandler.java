@@ -1,4 +1,4 @@
-package edu.java.scheduler.linkhandlers;
+package edu.java.scheduler.linkhandler.impl;
 
 import edu.java.client.GitHubWebClient;
 import edu.java.dto.github.GitHubCommit;
@@ -8,6 +8,8 @@ import java.net.URI;
 import java.time.OffsetDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.List;
+import edu.java.scheduler.linkhandler.HandlerResult;
+import edu.java.scheduler.linkhandler.LinkHandler;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
 
