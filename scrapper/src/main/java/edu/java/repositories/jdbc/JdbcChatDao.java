@@ -1,6 +1,6 @@
 package edu.java.repositories.jdbc;
 
-import edu.java.model.Chat;
+import edu.java.model.scheme.Chat;
 import edu.java.repositories.interfaces.ChatDao;
 import java.util.List;
 import lombok.RequiredArgsConstructor;

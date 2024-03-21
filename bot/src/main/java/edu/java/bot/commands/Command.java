@@ -5,6 +5,9 @@ import com.pengrad.telegrambot.model.Update;
 import com.pengrad.telegrambot.request.SendMessage;
 
 public interface Command {
+    String REQUEST_ERROR = "Failed to connect to the server";
+    String RESPONSE_ERROR = "UNKNOWN ERROR";
+
     String command();
 
     String description();

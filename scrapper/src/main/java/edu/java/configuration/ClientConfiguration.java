@@ -15,7 +15,7 @@ public class ClientConfiguration {
 
     @Bean
     public StackOverflowWebClient stackOverflowClient(ApplicationConfig applicationConfig) {
-        return StackOverflowWebClient.create(applicationConfig.clientBaseUrl().githubUrl());
+        return StackOverflowWebClient.create(applicationConfig.clientBaseUrl().stackoverflowUrl());
     }
 
     @Bean

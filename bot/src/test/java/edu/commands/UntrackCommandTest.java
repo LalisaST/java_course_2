@@ -4,17 +4,26 @@ import com.pengrad.telegrambot.model.Chat;
 import com.pengrad.telegrambot.model.Message;
 import com.pengrad.telegrambot.model.Update;
 import com.pengrad.telegrambot.request.SendMessage;
+import edu.java.bot.clients.ScrapperLinkWebClient;
 import edu.java.bot.commands.UntrackCommand;
+import edu.java.bot.link.LinkValidator;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
+import org.mockito.Mock;
+import org.mockito.junit.jupiter.MockitoExtension;
 import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
+@ExtendWith(MockitoExtension.class)
 public class UntrackCommandTest {
-    UntrackCommand untrackCommand = new UntrackCommand();
+    @Mock
+    ScrapperLinkWebClient scrapperLinkWebClient;
+    LinkValidator linkValidator;
+    UntrackCommand untrackCommand = new UntrackCommand(scrapperLinkWebClient, linkValidator);
 
     @Test
     @DisplayName("Проверка функции command")
@@ -38,7 +47,7 @@ public class UntrackCommandTest {
         when(update.message()).thenReturn(message);
         when(message.chat().id()).thenReturn(123L);
 
-        String MESSAGE = "Add a link";
+        String MESSAGE = "Incorrect command";
 
         SendMessage result = untrackCommand.handle(update);
         SendMessage sendMessage = new SendMessage(123L, MESSAGE);

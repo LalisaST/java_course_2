@@ -2,27 +2,29 @@ package edu.java.bot.commands;
 
 import com.pengrad.telegrambot.model.Update;
 import com.pengrad.telegrambot.request.SendMessage;
+import edu.java.bot.clients.ScrapperLinkWebClient;
+import edu.java.bot.dto.ApiErrorResponse;
+import edu.java.bot.dto.scrapper.AddLinkRequest;
 import edu.java.bot.link.LinkValidator;
 import java.net.URI;
+import lombok.RequiredArgsConstructor;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.springframework.stereotype.Component;
+import org.springframework.web.reactive.function.client.WebClientRequestException;
+import org.springframework.web.reactive.function.client.WebClientResponseException;
 
 @Component
+@RequiredArgsConstructor
 public class TrackCommand implements Command {
-    private static final Logger LOGGER = LogManager.getLogger();
+    private final ScrapperLinkWebClient scrapperLinkWebClient;
     private static final String NAME = "/track";
     private static final String DESCRIPTION = "Start tracking links";
     private static final String MESSAGE = "The link has been added to the list of tracked";
     private static final String INCORRECT_LINK = "Incorrect link syntax";
     private static final String UNSUITABLE_HOST = "The transferred site is not supported";
-    private static final String INCORRECT_COMMAND = "Add a link";
-
+    private static final String INCORRECT_COMMAND = "Incorrect command";
     private final LinkValidator linkValidator;
-
-    public TrackCommand(LinkValidator linkValidator) {
-        this.linkValidator = linkValidator;
-    }
 
     @Override
     public String command() {
@@ -53,17 +55,27 @@ public class TrackCommand implements Command {
         try {
             url = URI.create(text[1]);
         } catch (IllegalAccessError e) {
-            LOGGER.info(INCORRECT_LINK);
             return new SendMessage(chatId, INCORRECT_LINK);
         }
 
         if (!linkValidator.isValid(url)) {
-            LOGGER.info(UNSUITABLE_HOST);
             return new SendMessage(chatId, UNSUITABLE_HOST);
         }
 
-        LOGGER.info(MESSAGE);
-        //TODO: add link
+
+        try {
+            scrapperLinkWebClient.addLink(chatId, new AddLinkRequest(url));
+        } catch (WebClientRequestException e) {
+            return new SendMessage(chatId, REQUEST_ERROR);
+        } catch (WebClientResponseException e) {
+            ApiErrorResponse error = e.getResponseBodyAs(ApiErrorResponse.class);
+
+            if(error != null) {
+                return new SendMessage(chatId, error.description());
+            }
+            return new SendMessage(chatId, RESPONSE_ERROR);
+        }
+
         return new SendMessage(chatId, MESSAGE);
     }
 }

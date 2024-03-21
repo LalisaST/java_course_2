@@ -1,7 +1,7 @@
 package edu.java.scrapper.repositories;
 
-import edu.java.model.ChatLink;
-import edu.java.model.Type;
+import edu.java.model.scheme.ChatLink;
+import edu.java.model.scheme.Type;
 import edu.java.repositories.interfaces.ChatDao;
 import edu.java.repositories.interfaces.ChatLinkDao;
 import edu.java.repositories.interfaces.LinkDao;

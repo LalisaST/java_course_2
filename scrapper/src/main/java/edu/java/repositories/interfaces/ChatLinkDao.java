@@ -1,6 +1,6 @@
 package edu.java.repositories.interfaces;
 
-import edu.java.model.ChatLink;
+import edu.java.model.scheme.ChatLink;
 import java.util.List;
 import java.util.Optional;
 

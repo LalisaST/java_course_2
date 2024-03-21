@@ -1,4 +1,4 @@
-package edu.java.model;
+package edu.java.model.scheme;
 
 import jakarta.validation.constraints.NotNull;
 

@@ -4,12 +4,14 @@ import edu.java.client.StackOverflowWebClient;
 import edu.java.dto.stackoverflow.StackOverflowAnswer;
 import edu.java.dto.stackoverflow.StackOverflowComment;
 import edu.java.dto.stackoverflow.StackOverflowResponse;
-import edu.java.model.Link;
+import edu.java.model.scheme.Link;
 import edu.java.scheduler.linkhandler.HandlerResult;
 import edu.java.scheduler.linkhandler.LinkHandler;
 import java.net.URI;
 import java.time.OffsetDateTime;
 import java.time.format.DateTimeFormatter;
+import java.util.Objects;
+import edu.java.services.DefaultLinkService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
 
@@ -37,8 +39,8 @@ public class StackOverflowLinkHandler implements LinkHandler {
         StackOverflowComment stackOverflowComment = stackOverflowWebClient.fetchComments(questionID);
 
         StringBuilder description = new StringBuilder();
-        Integer answerCount = link.answerCount();
-        Integer commentCount = link.commentCount();
+        int answerCount = link.answerCount() == null ? 0 : link.answerCount();
+        int commentCount = link.commentCount() == null ? 0 : link.commentCount();
 
         OffsetDateTime time = link.lastUpdate();
         OffsetDateTime timeUpdate = stackOverflowResponse.items().get(0).lastActivity();

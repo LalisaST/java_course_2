@@ -2,23 +2,20 @@ package edu.java.bot.commands;
 
 import com.pengrad.telegrambot.model.Update;
 import com.pengrad.telegrambot.request.SendMessage;
-import edu.java.bot.clients.ScrapperLinkWebClient;
+import edu.java.bot.clients.ScrapperTgChatWebClient;
 import edu.java.bot.dto.ApiErrorResponse;
-import edu.java.bot.dto.scrapper.LinkResponse;
-import edu.java.bot.dto.scrapper.ListLinksResponse;
 import lombok.RequiredArgsConstructor;
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
 import org.springframework.stereotype.Component;
 import org.springframework.web.reactive.function.client.WebClientRequestException;
 import org.springframework.web.reactive.function.client.WebClientResponseException;
 
 @Component
 @RequiredArgsConstructor
-public class ListCommand implements Command {
-    private final ScrapperLinkWebClient scrapperLinkWebClient;
-    private static final String NAME = "/list";
-    private static final String DESCRIPTION = "Show a list of tracked links";
+public class EndCommand implements Command{
+    private final ScrapperTgChatWebClient scrapperTgChatWebClient;
+    private static final String NAME = "/end";
+    private static final String DESCRIPTION = "Deleting a chat";
+    private static final String MESSAGE = "The chat deletion was completed successfully";
 
     @Override
     public String command() {
@@ -33,10 +30,9 @@ public class ListCommand implements Command {
     @Override
     public SendMessage handle(Update update) {
         long chatId = update.message().chat().id();
-        ListLinksResponse listLinksResponse;
 
         try {
-          listLinksResponse = scrapperLinkWebClient.getAllLinks(chatId);
+            scrapperTgChatWebClient.deleteChat(chatId);
         } catch (WebClientRequestException e) {
             return new SendMessage(chatId, REQUEST_ERROR);
         } catch (WebClientResponseException e) {
@@ -48,12 +44,6 @@ public class ListCommand implements Command {
             return new SendMessage(chatId, RESPONSE_ERROR);
         }
 
-        StringBuilder stringBuilder = new StringBuilder();
-        stringBuilder.append(listLinksResponse.size()).append(" tracked links: ");
-
-        for(LinkResponse link: listLinksResponse.links()) {
-            stringBuilder.append(link.url()).append("\n");
-        }
-        return new SendMessage(update.message().chat().id(), stringBuilder.toString());
+        return new SendMessage(chatId, MESSAGE);
     }
 }

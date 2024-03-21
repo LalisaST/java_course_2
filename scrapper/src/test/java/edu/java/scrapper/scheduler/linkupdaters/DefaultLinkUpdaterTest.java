@@ -2,8 +2,8 @@ package edu.java.scrapper.scheduler.linkupdaters;
 
 import edu.java.client.BotWebClient;
 import edu.java.configuration.ApplicationConfig;
-import edu.java.model.Link;
-import edu.java.model.Type;
+import edu.java.model.scheme.Link;
+import edu.java.model.scheme.Type;
 import edu.java.scheduler.service.LinkUpdater;
 import edu.java.scheduler.linkhandler.impl.GitHubLinkHandler;
 import edu.java.scheduler.linkhandler.HandlerResult;

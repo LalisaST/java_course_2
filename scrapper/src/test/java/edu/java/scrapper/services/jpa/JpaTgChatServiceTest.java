@@ -1,69 +1,64 @@
-package edu.java.scrapper.services;
+package edu.java.scrapper.services.jpa;
 
 import edu.java.exception.NotFoundException;
 import edu.java.exception.RepeatedRegistrationException;
-import edu.java.model.scheme.Chat;
-import edu.java.repositories.jdbc.JdbcChatDao;
-import edu.java.repositories.jdbc.JdbcChatLinkDao;
-import edu.java.services.DefaultTgChatService;
+import edu.java.repositories.jpa.JpaChatRepository;
+import edu.java.repositories.jpa.JpaLinkRepository;
+import edu.java.services.jpa.JpaTgChatService;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
-import java.time.OffsetDateTime;
-import java.util.List;
 import static org.assertj.core.api.AssertionsForClassTypes.assertThatThrownBy;
 import static org.junit.jupiter.api.Assertions.assertDoesNotThrow;
 import static org.mockito.Mockito.when;
 
 @ExtendWith(MockitoExtension.class)
-public class DefaultTgChatServiceTest {
+public class JpaTgChatServiceTest {
     @Mock
-    private JdbcChatDao jdbcChatDao;
+    private JpaLinkRepository jpaLinkRepository;
     @Mock
-    private JdbcChatLinkDao jdbcChatLinkDao;
+    private JpaChatRepository jpaChatRepository;
 
-    private DefaultTgChatService defaultTgChatService;
-    private final OffsetDateTime time = OffsetDateTime.now();
+    private JpaTgChatService jpaTgChatService;
     private final Long id = 0L;
-    private final Chat chat = new Chat(id, time);
 
     @BeforeEach
     public void setUp() {
-        defaultTgChatService = new DefaultTgChatService(jdbcChatDao, jdbcChatLinkDao);
+        jpaTgChatService = new JpaTgChatService(jpaChatRepository, jpaLinkRepository);
     }
 
     @Test
     @DisplayName("Проверка регистрации чата")
     public void checkingChatRegistration() {
-        when(jdbcChatDao.findAll()).thenReturn(List.of());
+        when(jpaChatRepository.existsById(id)).thenReturn(false);
         assertDoesNotThrow(() ->
-            defaultTgChatService.registerChat(id));
+            jpaTgChatService.registerChat(id));
     }
 
     @Test
     @DisplayName("Проверка повторной регистрации чата")
     public void checkingRepeatedRegistrationChat() {
-        when(jdbcChatDao.findAll()).thenReturn(List.of(chat));
+        when(jpaChatRepository.existsById(id)).thenReturn(true);
 
-        assertThatThrownBy(() -> defaultTgChatService.registerChat(id)).isInstanceOf(RepeatedRegistrationException.class);
+        assertThatThrownBy(() -> jpaTgChatService.registerChat(id)).isInstanceOf(RepeatedRegistrationException.class);
     }
 
     @Test
     @DisplayName("Проверка удаления чата")
     public void checkingChatDeletion() {
-        when(jdbcChatDao.findAll()).thenReturn(List.of(chat));
+        when(jpaChatRepository.existsById(id)).thenReturn(true);
 
-        assertDoesNotThrow(() -> defaultTgChatService.deleteChat(id));
+        assertDoesNotThrow(() -> jpaTgChatService.deleteChat(id));
     }
 
     @Test
     @DisplayName("Удаление несуществующего чата")
     public void deletingNonexistentChat() {
-        when(jdbcChatDao.findAll()).thenReturn(List.of());
+        when(jpaChatRepository.existsById(id)).thenReturn(false);
 
-        assertThatThrownBy(() -> defaultTgChatService.deleteChat(id)).isInstanceOf(NotFoundException.class);
+        assertThatThrownBy(() -> jpaTgChatService.deleteChat(id)).isInstanceOf(NotFoundException.class);
     }
 }
