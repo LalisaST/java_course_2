@@ -29,9 +29,10 @@ public class JpaAccessConfiguration {
     public JpaLinkUpdater jpaLinkUpdater(
         ApplicationConfig applicationConfig,
         JpaLinkService jpaLinkService,
+        JpaTgChatService jpaTgChatService,
         List<LinkHandler> linkHandlers,
         BotWebClient botWebClient
     ) {
-        return new JpaLinkUpdater(applicationConfig, jpaLinkService, linkHandlers, botWebClient);
+        return new JpaLinkUpdater(applicationConfig, jpaLinkService, jpaTgChatService, linkHandlers, botWebClient);
     }
 }

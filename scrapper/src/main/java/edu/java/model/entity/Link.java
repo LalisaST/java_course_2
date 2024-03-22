@@ -15,6 +15,7 @@ import java.util.HashSet;
 import java.util.Set;
 import lombok.Getter;
 import lombok.Setter;
+import org.hibernate.annotations.ColumnDefault;
 
 @Entity
 @Setter
@@ -24,13 +25,15 @@ public class Link {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @Column
+    @Column(unique = true)
     private URI url;
 
-    @Column
+    @ColumnDefault("current_timestamp")
+    @Column(insertable = false)
     private OffsetDateTime lastUpdate;
 
-    @Column
+    @ColumnDefault("current_timestamp")
+    @Column(insertable = false)
     private OffsetDateTime lastCheck;
 
     @Enumerated(value = EnumType.STRING)

@@ -98,7 +98,7 @@ public class JpaLinkServiceTest {
     public void checkingRepeatedLink() {
         when(jpaChatRepository.existsById(id)).thenReturn(true);
         when(jpaLinkRepository.save(any())).thenReturn(link);
-        when(jpaLinkRepository.findByIdAndChatsId(id, id)).thenReturn(Optional.of(true));
+        when(jpaLinkRepository.findByIdAndChatsId(id, id)).thenReturn(Optional.of(new Link()));
 
         assertThatThrownBy(() -> jpaLinkService.addLink(id, addLinkRequest)).isInstanceOf(RepeatedLinkException.class);
     }
@@ -108,7 +108,7 @@ public class JpaLinkServiceTest {
     public void checkingDeletingLink() {
         when(jpaChatRepository.existsById(id)).thenReturn(true);
         when(jpaLinkRepository.findLinkByUrl(url)).thenReturn(Optional.of(link));
-        when(jpaLinkRepository.findByIdAndChatsId(id, id)).thenReturn(Optional.of(true));
+        when(jpaLinkRepository.findByIdAndChatsId(id, id)).thenReturn(Optional.of(new Link()));
         when(jpaChatRepository.findById(id)).thenReturn(Optional.of(chat));
 
         LinkResponse linkResponse = new LinkResponse(id, removeLinkRequest.url());

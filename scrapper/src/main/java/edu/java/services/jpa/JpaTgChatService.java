@@ -6,6 +6,7 @@ import edu.java.model.entity.Chat;
 import edu.java.repositories.jpa.JpaChatRepository;
 import edu.java.repositories.jpa.JpaLinkRepository;
 import edu.java.services.interfaces.TgChatService;
+import java.util.List;
 import lombok.RequiredArgsConstructor;
 
 @RequiredArgsConstructor
@@ -32,6 +33,11 @@ public class JpaTgChatService implements TgChatService {
         } else {
             throw new NotFoundException("The chat does not exist");
         }
+    }
 
+    public List<Long> findChatsIdById(Long linkId) {
+        return jpaChatRepository.findByLinksId(linkId).stream()
+            .map(Chat::getId)
+            .toList();
     }
 }

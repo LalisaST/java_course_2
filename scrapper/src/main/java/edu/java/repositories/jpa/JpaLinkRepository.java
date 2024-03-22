@@ -17,11 +17,9 @@ public interface JpaLinkRepository extends JpaRepository<Link, Long> {
 
     List<Link> findAllByChatsId(Long id);
 
-    Optional<Boolean> findByIdAndChatsId(Long linkId, Long chatId);
+    Optional<Link> findByIdAndChatsId(Long linkId, Long chatId);
 
-    List<Long> findChatsIdById(Long linkId);
-
-    @Query(value = "select l from Link l where extract(epoch from l.last_check - current_timestamp) > ?1",
+    @Query(value = "select * from link  where extract(epoch from current_timestamp - last_check) > ?1",
            nativeQuery = true)
     List<Link> findByLastCheckGreaterThanSomeSeconds(Long seconds);
 

@@ -8,6 +8,7 @@ import edu.java.scheduler.linkhandler.HandlerResult;
 import edu.java.scheduler.linkhandler.LinkHandler;
 import edu.java.services.DefaultLinkService;
 import edu.java.services.DefaultTgChatService;
+import java.time.OffsetDateTime;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
 
@@ -44,14 +45,11 @@ public class DefaultLinkUpdater implements LinkUpdater {
             botWebClient.update(linkUpdateRequest);
         }
 
-        for (Long id : chatList) {
-            defaultLinkService.updateLastCheck(id, result.time());
-        }
+        defaultLinkService.updateLastCheck(linkId, OffsetDateTime.now());
     }
 
     private void updateData(Long linkId, HandlerResult result) {
         defaultLinkService.updateLastUpdate(linkId, result.time());
-        defaultLinkService.updateLastCheck(linkId, result.time());
         defaultLinkService.updateCommitCount(linkId, result.commitCount());
         defaultLinkService.updateAnswerCount(linkId, result.answerCount());
         defaultLinkService.updateCommentCount(linkId, result.commentCount());

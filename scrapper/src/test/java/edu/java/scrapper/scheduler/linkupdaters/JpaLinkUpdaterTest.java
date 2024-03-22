@@ -9,6 +9,7 @@ import edu.java.scheduler.linkhandler.impl.GitHubLinkHandler;
 import edu.java.scheduler.service.LinkUpdater;
 import edu.java.scheduler.service.jpa.JpaLinkUpdater;
 import edu.java.services.jpa.JpaLinkService;
+import edu.java.services.jpa.JpaTgChatService;
 import java.net.URI;
 import java.time.Duration;
 import java.time.OffsetDateTime;
@@ -27,6 +28,8 @@ import static org.mockito.Mockito.when;
 public class JpaLinkUpdaterTest {
     @Mock
     private JpaLinkService jpaLinkService;
+    @Mock
+    private JpaTgChatService jpaTgChatService;
     @Mock
     private ApplicationConfig applicationConfig;
     @Mock
@@ -76,6 +79,7 @@ public class JpaLinkUpdaterTest {
         LinkUpdater linkUpdater = new JpaLinkUpdater(
             applicationConfig,
             jpaLinkService,
+            jpaTgChatService,
             List.of(gitHubLinkHandler),
             botWebClient
         );

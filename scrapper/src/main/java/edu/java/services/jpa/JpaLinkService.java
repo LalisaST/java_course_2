@@ -90,10 +90,6 @@ public class JpaLinkService implements LinkService {
         return jpaLinkRepository.findByLastCheckGreaterThanSomeSeconds(second);
     }
 
-    public List<Long> findChatsIdById(Long linkId) {
-        return jpaLinkRepository.findChatsIdById(linkId);
-    }
-
     private LinkResponse linkMapper(Link link) {
         return new LinkResponse(link.getId(), link.getUrl());
     }
