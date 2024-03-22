@@ -6,11 +6,11 @@ import edu.java.bot.clients.ScrapperLinkWebClient;
 import edu.java.bot.dto.ApiErrorResponse;
 import edu.java.bot.dto.scrapper.RemoveLinkRequest;
 import edu.java.bot.link.LinkValidator;
+import java.net.URI;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
 import org.springframework.web.reactive.function.client.WebClientRequestException;
 import org.springframework.web.reactive.function.client.WebClientResponseException;
-import java.net.URI;
 
 @Component
 @RequiredArgsConstructor
@@ -60,6 +60,10 @@ public class UntrackCommand implements Command {
             return new SendMessage(chatId, UNSUITABLE_HOST);
         }
 
+        return attemptDeleteLink(chatId, url);
+    }
+
+    private SendMessage attemptDeleteLink(Long chatId, URI url) {
         try {
             scrapperLinkWebClient.deleteLink(chatId, new RemoveLinkRequest(url));
         } catch (WebClientRequestException e) {
@@ -67,7 +71,7 @@ public class UntrackCommand implements Command {
         } catch (WebClientResponseException e) {
             ApiErrorResponse error = e.getResponseBodyAs(ApiErrorResponse.class);
 
-            if(error != null) {
+            if (error != null) {
                 return new SendMessage(chatId, error.description());
             }
             return new SendMessage(chatId, RESPONSE_ERROR);

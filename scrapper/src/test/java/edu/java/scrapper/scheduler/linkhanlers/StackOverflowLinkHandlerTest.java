@@ -62,20 +62,20 @@ public class StackOverflowLinkHandlerTest {
         );
 
         OffsetDateTime lastModified = OffsetDateTime.of(2024, 4, 21, 0, 0, 0, 0, ZoneOffset.UTC);
-        stubFor(get(urlEqualTo("/questions/" + 2003505))
+        stubFor(get(urlEqualTo("/questions/" + 2003505 +"?site=stackoverflow"))
             .willReturn(aResponse()
                 .withStatus(200)
                 .withHeader("Content-Type", MediaType.APPLICATION_JSON_VALUE)
                 .withBody(
                     "{\"items\": [{\"link\": \"" + link.url() + "\", \"last_activity_date\": \"" + lastModified + "\"}]}")));
 
-        stubFor(get(urlEqualTo("/questions/" + 2003505 + "/answers"))
+        stubFor(get(urlEqualTo("/questions/" + 2003505 + "/answers?site=stackoverflow"))
             .willReturn(aResponse()
                 .withStatus(200)
                 .withHeader("Content-Type", MediaType.APPLICATION_JSON_VALUE)
                 .withBody("{\"items\": [{}]}")));
 
-        stubFor(get(urlEqualTo("/questions/" + 2003505 + "/comments"))
+        stubFor(get(urlEqualTo("/questions/" + 2003505 + "/comments?site=stackoverflow"))
             .willReturn(aResponse()
                 .withStatus(200)
                 .withHeader("Content-Type", MediaType.APPLICATION_JSON_VALUE)
@@ -95,19 +95,19 @@ public class StackOverflowLinkHandlerTest {
             lastModified, lastModified, Type.GITHUB,0, 0, 0
         );
 
-        stubFor(get(urlEqualTo("/questions/" + 2003505))
+        stubFor(get(urlEqualTo("/questions/" + 2003505 + "?site=stackoverflow"))
             .willReturn(aResponse()
                 .withStatus(200)
                 .withHeader("Content-Type", MediaType.APPLICATION_JSON_VALUE)
                 .withBody(
                     "{\"items\": [{\"link\": \"" + link.url() + "\", \"last_activity_date\": \"" + lastModified + "\"}]}")));
-        stubFor(get(urlEqualTo("/questions/" + 2003505 + "/answers"))
+        stubFor(get(urlEqualTo("/questions/" + 2003505 + "/answers?site=stackoverflow"))
             .willReturn(aResponse()
                 .withStatus(200)
                 .withHeader("Content-Type", MediaType.APPLICATION_JSON_VALUE)
                 .withBody("{\"items\": []}")));
 
-        stubFor(get(urlEqualTo("/questions/" + 2003505 + "/comments"))
+        stubFor(get(urlEqualTo("/questions/" + 2003505 + "/comments?site=stackoverflow"))
             .willReturn(aResponse()
                 .withStatus(200)
                 .withHeader("Content-Type", MediaType.APPLICATION_JSON_VALUE)

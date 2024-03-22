@@ -9,12 +9,12 @@ import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.ManyToMany;
-import lombok.Getter;
-import lombok.Setter;
 import java.net.URI;
 import java.time.OffsetDateTime;
 import java.util.HashSet;
 import java.util.Set;
+import lombok.Getter;
+import lombok.Setter;
 
 @Entity
 @Setter
@@ -45,6 +45,6 @@ public class Link {
     @Column
     private Integer commentCount;
 
-    @ManyToMany(mappedBy = "chat_id")
+    @ManyToMany(mappedBy = "links")
     private Set<Chat> chats = new HashSet<>();
 }

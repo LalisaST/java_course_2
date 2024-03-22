@@ -7,12 +7,9 @@ import edu.java.model.entity.Link;
 import edu.java.scheduler.linkhandler.HandlerResult;
 import edu.java.scheduler.linkhandler.LinkHandler;
 import edu.java.scheduler.service.LinkUpdater;
-import edu.java.services.DefaultLinkService;
-import edu.java.services.DefaultTgChatService;
 import edu.java.services.jpa.JpaLinkService;
-import edu.java.services.jpa.JpaTgChatService;
-import lombok.RequiredArgsConstructor;
 import java.util.List;
+import lombok.RequiredArgsConstructor;
 
 @RequiredArgsConstructor
 public class JpaLinkUpdater implements LinkUpdater {
@@ -37,17 +34,13 @@ public class JpaLinkUpdater implements LinkUpdater {
         edu.java.model.scheme.Link linkScheme = linkMapper(link);
         HandlerResult result = linkHandler.updateLink(linkScheme);
         Long linkId = link.getId();
-        List<Long> chatList = jpaLinkService.findChats_IdById(linkId);
+        List<Long> chatList = jpaLinkService.findChatsIdById(linkId);
 
         if (result.update()) {
             LinkUpdateRequest linkUpdateRequest =
                 new LinkUpdateRequest(linkId, link.getUrl(), result.description(), chatList);
-            jpaLinkService.updateLastUpdate(linkId, result.time());
-            jpaLinkService.updateLastCheck(linkId, result.time());
-            jpaLinkService.updateCommitCount(linkId, result.commitCount());
-            jpaLinkService.updateAnswerCount(linkId, result.answerCount());
-            jpaLinkService.updateCommentCount(linkId, result.commentCount());
 
+            updateData(linkId, result);
             botWebClient.update(linkUpdateRequest);
         }
 
@@ -67,5 +60,13 @@ public class JpaLinkUpdater implements LinkUpdater {
             link.getAnswerCount(),
             link.getCommentCount()
         );
+    }
+
+    private void updateData(Long linkId, HandlerResult result) {
+        jpaLinkService.updateLastUpdate(linkId, result.time());
+        jpaLinkService.updateLastCheck(linkId, result.time());
+        jpaLinkService.updateCommitCount(linkId, result.commitCount());
+        jpaLinkService.updateAnswerCount(linkId, result.answerCount());
+        jpaLinkService.updateCommentCount(linkId, result.commentCount());
     }
 }

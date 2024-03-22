@@ -39,11 +39,7 @@ public class DefaultLinkUpdater implements LinkUpdater {
         if (result.update()) {
             LinkUpdateRequest linkUpdateRequest =
                 new LinkUpdateRequest(linkId, link.url(), result.description(), chatList);
-            defaultLinkService.updateLastUpdate(linkId, result.time());
-            defaultLinkService.updateLastCheck(linkId, result.time());
-            defaultLinkService.updateCommitCount(linkId, result.commitCount());
-            defaultLinkService.updateAnswerCount(linkId, result.answerCount());
-            defaultLinkService.updateCommentCount(linkId, result.commentCount());
+            updateData(linkId, result);
 
             botWebClient.update(linkUpdateRequest);
         }
@@ -51,5 +47,13 @@ public class DefaultLinkUpdater implements LinkUpdater {
         for (Long id : chatList) {
             defaultLinkService.updateLastCheck(id, result.time());
         }
+    }
+
+    private void updateData(Long linkId, HandlerResult result) {
+        defaultLinkService.updateLastUpdate(linkId, result.time());
+        defaultLinkService.updateLastCheck(linkId, result.time());
+        defaultLinkService.updateCommitCount(linkId, result.commitCount());
+        defaultLinkService.updateAnswerCount(linkId, result.answerCount());
+        defaultLinkService.updateCommentCount(linkId, result.commentCount());
     }
 }

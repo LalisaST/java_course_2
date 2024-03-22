@@ -8,8 +8,6 @@ import edu.java.bot.dto.scrapper.AddLinkRequest;
 import edu.java.bot.link.LinkValidator;
 import java.net.URI;
 import lombok.RequiredArgsConstructor;
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
 import org.springframework.stereotype.Component;
 import org.springframework.web.reactive.function.client.WebClientRequestException;
 import org.springframework.web.reactive.function.client.WebClientResponseException;
@@ -62,7 +60,10 @@ public class TrackCommand implements Command {
             return new SendMessage(chatId, UNSUITABLE_HOST);
         }
 
+        return attemptAddLink(chatId, url);
+    }
 
+    private SendMessage attemptAddLink(Long chatId, URI url) {
         try {
             scrapperLinkWebClient.addLink(chatId, new AddLinkRequest(url));
         } catch (WebClientRequestException e) {
@@ -70,7 +71,7 @@ public class TrackCommand implements Command {
         } catch (WebClientResponseException e) {
             ApiErrorResponse error = e.getResponseBodyAs(ApiErrorResponse.class);
 
-            if(error != null) {
+            if (error != null) {
                 return new SendMessage(chatId, error.description());
             }
             return new SendMessage(chatId, RESPONSE_ERROR);

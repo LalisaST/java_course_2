@@ -5,8 +5,6 @@ import com.pengrad.telegrambot.request.SendMessage;
 import edu.java.bot.clients.ScrapperTgChatWebClient;
 import edu.java.bot.dto.ApiErrorResponse;
 import lombok.RequiredArgsConstructor;
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
 import org.springframework.stereotype.Component;
 import org.springframework.web.reactive.function.client.WebClientRequestException;
 import org.springframework.web.reactive.function.client.WebClientResponseException;
@@ -40,7 +38,7 @@ public class StartCommand implements Command {
         } catch (WebClientResponseException e) {
             ApiErrorResponse error = e.getResponseBodyAs(ApiErrorResponse.class);
 
-            if(error != null) {
+            if (error != null) {
                 return new SendMessage(chatId, error.description());
             }
             return new SendMessage(chatId, RESPONSE_ERROR);

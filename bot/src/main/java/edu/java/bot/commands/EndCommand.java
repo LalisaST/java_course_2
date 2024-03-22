@@ -11,7 +11,7 @@ import org.springframework.web.reactive.function.client.WebClientResponseExcepti
 
 @Component
 @RequiredArgsConstructor
-public class EndCommand implements Command{
+public class EndCommand implements Command {
     private final ScrapperTgChatWebClient scrapperTgChatWebClient;
     private static final String NAME = "/end";
     private static final String DESCRIPTION = "Deleting a chat";
@@ -38,7 +38,7 @@ public class EndCommand implements Command{
         } catch (WebClientResponseException e) {
             ApiErrorResponse error = e.getResponseBodyAs(ApiErrorResponse.class);
 
-            if(error != null) {
+            if (error != null) {
                 return new SendMessage(chatId, error.description());
             }
             return new SendMessage(chatId, RESPONSE_ERROR);

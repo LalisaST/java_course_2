@@ -7,8 +7,6 @@ import edu.java.bot.dto.ApiErrorResponse;
 import edu.java.bot.dto.scrapper.LinkResponse;
 import edu.java.bot.dto.scrapper.ListLinksResponse;
 import lombok.RequiredArgsConstructor;
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
 import org.springframework.stereotype.Component;
 import org.springframework.web.reactive.function.client.WebClientRequestException;
 import org.springframework.web.reactive.function.client.WebClientResponseException;
@@ -36,13 +34,13 @@ public class ListCommand implements Command {
         ListLinksResponse listLinksResponse;
 
         try {
-          listLinksResponse = scrapperLinkWebClient.getAllLinks(chatId);
+            listLinksResponse = scrapperLinkWebClient.getAllLinks(chatId);
         } catch (WebClientRequestException e) {
             return new SendMessage(chatId, REQUEST_ERROR);
         } catch (WebClientResponseException e) {
             ApiErrorResponse error = e.getResponseBodyAs(ApiErrorResponse.class);
 
-            if(error != null) {
+            if (error != null) {
                 return new SendMessage(chatId, error.description());
             }
             return new SendMessage(chatId, RESPONSE_ERROR);
@@ -51,7 +49,7 @@ public class ListCommand implements Command {
         StringBuilder stringBuilder = new StringBuilder();
         stringBuilder.append(listLinksResponse.size()).append(" tracked links: ");
 
-        for(LinkResponse link: listLinksResponse.links()) {
+        for (LinkResponse link : listLinksResponse.links()) {
             stringBuilder.append(link.url()).append("\n");
         }
         return new SendMessage(update.message().chat().id(), stringBuilder.toString());

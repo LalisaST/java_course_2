@@ -10,8 +10,6 @@ import edu.java.scheduler.linkhandler.LinkHandler;
 import java.net.URI;
 import java.time.OffsetDateTime;
 import java.time.format.DateTimeFormatter;
-import java.util.Objects;
-import edu.java.services.DefaultLinkService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
 

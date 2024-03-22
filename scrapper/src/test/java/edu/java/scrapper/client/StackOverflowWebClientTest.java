@@ -47,7 +47,7 @@ public class StackOverflowWebClientTest {
         List<StackOverflowResponse.Item> items = List.of(new StackOverflowResponse.Item(link, lastModified));
         StackOverflowResponse expectedResponse = new StackOverflowResponse(items);
 
-        stubFor(get(urlEqualTo("/questions/" + questionId))
+        stubFor(get(urlEqualTo("/questions/" + questionId + "?site=stackoverflow"))
             .willReturn(aResponse()
                 .withStatus(200)
                 .withHeader("Content-Type", MediaType.APPLICATION_JSON_VALUE)
@@ -65,7 +65,7 @@ public class StackOverflowWebClientTest {
     public void testWrongBody() {
         Long questionId = 123L;
 
-        stubFor(get(urlEqualTo("/questions/" + questionId))
+        stubFor(get(urlEqualTo("/questions/" + questionId +"?site=stackoverflow"))
             .willReturn(aResponse()
                 .withStatus(200)
                 .withHeader("Content-Type", MediaType.APPLICATION_JSON_VALUE)
@@ -84,7 +84,7 @@ public class StackOverflowWebClientTest {
         List<StackOverflowAnswer.Item> items = List.of();
         StackOverflowAnswer expectedResponse = new StackOverflowAnswer(items);
 
-        stubFor(get(urlEqualTo("/questions/" + questionId + "/answers"))
+        stubFor(get(urlEqualTo("/questions/" + questionId + "/answers?site=stackoverflow"))
             .willReturn(aResponse()
                 .withStatus(200)
                 .withHeader("Content-Type", MediaType.APPLICATION_JSON_VALUE)
@@ -104,7 +104,7 @@ public class StackOverflowWebClientTest {
         List<StackOverflowComment.Item> items = List.of();
         StackOverflowComment expectedResponse = new StackOverflowComment(items);
 
-        stubFor(get(urlEqualTo("/questions/" + questionId + "/comments"))
+        stubFor(get(urlEqualTo("/questions/" + questionId + "/comments?site=stackoverflow"))
             .willReturn(aResponse()
                 .withStatus(200)
                 .withHeader("Content-Type", MediaType.APPLICATION_JSON_VALUE)

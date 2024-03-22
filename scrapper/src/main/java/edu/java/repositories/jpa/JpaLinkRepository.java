@@ -9,21 +9,19 @@ import java.util.Optional;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
-import org.springframework.stereotype.Repository;
 
-@Repository
 public interface JpaLinkRepository extends JpaRepository<Link, Long> {
     void deleteAllByChatsEmpty();
 
     Optional<Link> findLinkByUrl(URI url);
 
-    List<Link> findAllByChats_Id(Long id);
+    List<Link> findAllByChatsId(Long id);
 
-    Optional<Void> findByIdAndChats_Id(Long linkId, Long chatId);
+    Optional<Boolean> findByIdAndChatsId(Long linkId, Long chatId);
 
-    List<Long> findChats_IdById(Long linkId);
+    List<Long> findChatsIdById(Long linkId);
 
-    @Query(value = "select * from link where extract(epoch from current_timestamp - last_check) > ?1",
+    @Query(value = "select l from Link l where extract(epoch from l.last_check - current_timestamp) > ?1",
            nativeQuery = true)
     List<Link> findByLastCheckGreaterThanSomeSeconds(Long seconds);
 

@@ -12,20 +12,21 @@ import edu.java.model.scheme.Type;
 import edu.java.repositories.jpa.JpaChatRepository;
 import edu.java.repositories.jpa.JpaLinkRepository;
 import edu.java.services.interfaces.LinkService;
-import lombok.RequiredArgsConstructor;
 import java.net.URI;
 import java.time.OffsetDateTime;
 import java.util.List;
+import lombok.RequiredArgsConstructor;
 
 @RequiredArgsConstructor
 public class JpaLinkService implements LinkService {
+    private static final String EXCEPTION_CHAT_NOT_FOUND = "The chat was not found";
     private final JpaChatRepository jpaChatRepository;
     private final JpaLinkRepository jpaLinkRepository;
 
     @Override
     public ListLinksResponse getLinks(Long chatId) {
         searchChat(chatId);
-        List<Link> linkList = jpaLinkRepository.findAllByChats_Id(chatId);
+        List<Link> linkList = jpaLinkRepository.findAllByChatsId(chatId);
 
         List<LinkResponse> links = linkList.stream()
             .map(this::linkMapper)
@@ -48,12 +49,12 @@ public class JpaLinkService implements LinkService {
         Link link = jpaLinkRepository.findLinkByUrl(url)
             .orElseGet(() -> jpaLinkRepository.save(newLink));
 
-        jpaLinkRepository.findByIdAndChats_Id(link.getId(), chatId).ifPresent(e -> {
+        jpaLinkRepository.findByIdAndChatsId(link.getId(), chatId).ifPresent(e -> {
             throw new RepeatedLinkException("The link is already being tracked");
         });
 
         Chat chat =
-            jpaChatRepository.findById(chatId).orElseThrow(() -> new NotFoundException("The chat was not found"));
+            jpaChatRepository.findById(chatId).orElseThrow(() -> new NotFoundException(EXCEPTION_CHAT_NOT_FOUND));
         chat.addLink(link);
         jpaChatRepository.save(chat);
 
@@ -68,11 +69,11 @@ public class JpaLinkService implements LinkService {
         Link link = jpaLinkRepository.findLinkByUrl(url)
             .orElseThrow(() -> new NotFoundException("The link does not exist"));
 
-        jpaLinkRepository.findByIdAndChats_Id(link.getId(), chatId)
+        jpaLinkRepository.findByIdAndChatsId(link.getId(), chatId)
             .orElseThrow(() -> new NotFoundException("The link does not tracked"));
 
         Chat chat =
-            jpaChatRepository.findById(chatId).orElseThrow(() -> new NotFoundException("The chat was not found"));
+            jpaChatRepository.findById(chatId).orElseThrow(() -> new NotFoundException(EXCEPTION_CHAT_NOT_FOUND));
         chat.removeLink(link);
         jpaLinkRepository.deleteAllByChatsEmpty();
 
@@ -81,7 +82,7 @@ public class JpaLinkService implements LinkService {
 
     private void searchChat(Long chatId) {
         if (!jpaChatRepository.existsById(chatId)) {
-            throw new NotFoundException("The chat was not found");
+            throw new NotFoundException(EXCEPTION_CHAT_NOT_FOUND);
         }
     }
 
@@ -89,8 +90,8 @@ public class JpaLinkService implements LinkService {
         return jpaLinkRepository.findByLastCheckGreaterThanSomeSeconds(second);
     }
 
-    public List<Long> findChats_IdById(Long linkId) {
-        return jpaLinkRepository.findChats_IdById(linkId);
+    public List<Long> findChatsIdById(Long linkId) {
+        return jpaLinkRepository.findChatsIdById(linkId);
     }
 
     private LinkResponse linkMapper(Link link) {

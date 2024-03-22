@@ -12,18 +12,16 @@ import edu.java.model.scheme.Type;
 import edu.java.repositories.jpa.JpaChatRepository;
 import edu.java.repositories.jpa.JpaLinkRepository;
 import edu.java.services.jpa.JpaLinkService;
+import java.net.URI;
+import java.time.OffsetDateTime;
+import java.util.List;
+import java.util.Optional;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
-import java.net.URI;
-import java.time.OffsetDateTime;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Optional;
-import java.util.Set;
 import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
 import static org.assertj.core.api.AssertionsForClassTypes.assertThatThrownBy;
 import static org.mockito.ArgumentMatchers.any;
@@ -35,7 +33,6 @@ public class JpaLinkServiceTest {
     private JpaLinkRepository jpaLinkRepository;
     @Mock
     private JpaChatRepository jpaChatRepository;
-
 
     private final URI url = URI.create("https://github.com/LalisaST/java_course_2");
     private final RemoveLinkRequest removeLinkRequest = new RemoveLinkRequest(url);
@@ -77,7 +74,7 @@ public class JpaLinkServiceTest {
     @DisplayName("Проверка получения ссылок")
     public void checkingGettingLinks() {
         when(jpaChatRepository.existsById(id)).thenReturn(true);
-        when(jpaLinkRepository.findAllByChats_Id(id)).thenReturn(List.of(link));
+        when(jpaLinkRepository.findAllByChatsId(id)).thenReturn(List.of(link));
 
         List<LinkResponse> links = List.of(new LinkResponse(id, url));
         ListLinksResponse listLinksResponse = new ListLinksResponse(links, links.size());
@@ -100,8 +97,8 @@ public class JpaLinkServiceTest {
     @DisplayName("Проверка повторного добавления ссылки")
     public void checkingRepeatedLink() {
         when(jpaChatRepository.existsById(id)).thenReturn(true);
-        when(jpaLinkRepository.findLinkByUrl(url)).thenReturn(Optional.of(link));
-     //   when(jpaLinkRepository.findAllByIdAndChats_Id(id, id)).thenReturn(Optional.of(chatLink));
+        when(jpaLinkRepository.save(any())).thenReturn(link);
+        when(jpaLinkRepository.findByIdAndChatsId(id, id)).thenReturn(Optional.of(true));
 
         assertThatThrownBy(() -> jpaLinkService.addLink(id, addLinkRequest)).isInstanceOf(RepeatedLinkException.class);
     }
@@ -111,7 +108,8 @@ public class JpaLinkServiceTest {
     public void checkingDeletingLink() {
         when(jpaChatRepository.existsById(id)).thenReturn(true);
         when(jpaLinkRepository.findLinkByUrl(url)).thenReturn(Optional.of(link));
-     //   when(jpaLinkRepository.findAllByIdAndChats_Id(id, id)).thenReturn(Optional.of(chatLink));
+        when(jpaLinkRepository.findByIdAndChatsId(id, id)).thenReturn(Optional.of(true));
+        when(jpaChatRepository.findById(id)).thenReturn(Optional.of(chat));
 
         LinkResponse linkResponse = new LinkResponse(id, removeLinkRequest.url());
         assertThat(jpaLinkService.deleteLink(id, removeLinkRequest)).isEqualTo(linkResponse);
@@ -132,7 +130,7 @@ public class JpaLinkServiceTest {
     public void checkingDeletingUntraceableLink() {
         when(jpaChatRepository.existsById(id)).thenReturn(true);
         when(jpaLinkRepository.findLinkByUrl(url)).thenReturn(Optional.of(link));
-        when(jpaLinkRepository.findByIdAndChats_Id(id, id)).thenReturn(Optional.empty());
+        when(jpaLinkRepository.findByIdAndChatsId(id, id)).thenReturn(Optional.empty());
 
         assertThatThrownBy(() -> jpaLinkService.deleteLink(id, removeLinkRequest))
             .isInstanceOf(NotFoundException.class);

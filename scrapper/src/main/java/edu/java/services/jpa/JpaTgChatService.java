@@ -7,9 +7,7 @@ import edu.java.repositories.jpa.JpaChatRepository;
 import edu.java.repositories.jpa.JpaLinkRepository;
 import edu.java.services.interfaces.TgChatService;
 import lombok.RequiredArgsConstructor;
-import org.springframework.stereotype.Service;
 
-@Service
 @RequiredArgsConstructor
 public class JpaTgChatService implements TgChatService {
     private final JpaChatRepository jpaChatRepository;

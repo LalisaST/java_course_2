@@ -4,11 +4,11 @@ import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.Id;
 import jakarta.persistence.ManyToMany;
-import lombok.Getter;
-import lombok.Setter;
 import java.time.OffsetDateTime;
 import java.util.HashSet;
 import java.util.Set;
+import lombok.Getter;
+import lombok.Setter;
 
 @Entity
 @Setter
@@ -17,7 +17,7 @@ public class Chat {
     @Id
     private Long id;
 
-    @Column(name = "create_at")
+    @Column
     private OffsetDateTime createAt;
 
     @ManyToMany
