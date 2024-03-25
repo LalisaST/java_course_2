@@ -2,14 +2,27 @@ package edu.java.bot.commands;
 
 import com.pengrad.telegrambot.model.Update;
 import com.pengrad.telegrambot.request.SendMessage;
+import edu.java.bot.clients.ScrapperLinkWebClient;
+import edu.java.bot.dto.ApiErrorResponse;
+import edu.java.bot.dto.scrapper.RemoveLinkRequest;
+import edu.java.bot.link.LinkValidator;
+import java.net.URI;
+import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
+import org.springframework.web.reactive.function.client.WebClientRequestException;
+import org.springframework.web.reactive.function.client.WebClientResponseException;
 
 @Component
+@RequiredArgsConstructor
 public class UntrackCommand implements Command {
+    private final ScrapperLinkWebClient scrapperLinkWebClient;
     private static final String NAME = "/untrack";
     private static final String DESCRIPTION = "Stop tracking the link";
+    private static final String INCORRECT_LINK = "Incorrect link syntax";
+    private static final String UNSUITABLE_HOST = "The transferred site is not supported";
     private static final String MESSAGE = "The link has been removed from the list of tracked";
-    private static final String INCORRECT_COMMAND = "Add a link";
+    private static final String INCORRECT_COMMAND = "Incorrect command";
+    private final LinkValidator linkValidator;
 
     @Override
     public String command() {
@@ -36,7 +49,33 @@ public class UntrackCommand implements Command {
             return new SendMessage(chatId, INCORRECT_COMMAND);
         }
 
-        //TODO: remove link
+        URI url;
+        try {
+            url = URI.create(text[1]);
+        } catch (IllegalAccessError e) {
+            return new SendMessage(chatId, INCORRECT_LINK);
+        }
+
+        if (!linkValidator.isValid(url)) {
+            return new SendMessage(chatId, UNSUITABLE_HOST);
+        }
+
+        return attemptDeleteLink(chatId, url);
+    }
+
+    private SendMessage attemptDeleteLink(Long chatId, URI url) {
+        try {
+            scrapperLinkWebClient.deleteLink(chatId, new RemoveLinkRequest(url));
+        } catch (WebClientRequestException e) {
+            return new SendMessage(chatId, REQUEST_ERROR);
+        } catch (WebClientResponseException e) {
+            ApiErrorResponse error = e.getResponseBodyAs(ApiErrorResponse.class);
+
+            if (error != null) {
+                return new SendMessage(chatId, error.description());
+            }
+            return new SendMessage(chatId, RESPONSE_ERROR);
+        }
         return new SendMessage(chatId, MESSAGE);
     }
 }

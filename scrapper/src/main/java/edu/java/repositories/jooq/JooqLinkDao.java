@@ -1,7 +1,7 @@
 package edu.java.repositories.jooq;
 
-import edu.java.model.Link;
-import edu.java.model.Type;
+import edu.java.model.scheme.Link;
+import edu.java.model.scheme.Type;
 import edu.java.repositories.interfaces.LinkDao;
 import java.net.URI;
 import java.time.OffsetDateTime;

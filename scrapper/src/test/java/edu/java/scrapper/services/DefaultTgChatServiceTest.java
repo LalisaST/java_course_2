@@ -2,7 +2,7 @@ package edu.java.scrapper.services;
 
 import edu.java.exception.NotFoundException;
 import edu.java.exception.RepeatedRegistrationException;
-import edu.java.model.Chat;
+import edu.java.model.scheme.Chat;
 import edu.java.repositories.jdbc.JdbcChatDao;
 import edu.java.repositories.jdbc.JdbcChatLinkDao;
 import edu.java.services.DefaultTgChatService;

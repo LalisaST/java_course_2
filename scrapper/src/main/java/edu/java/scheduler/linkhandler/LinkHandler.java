@@ -1,6 +1,6 @@
 package edu.java.scheduler.linkhandler;
 
-import edu.java.model.Link;
+import edu.java.model.scheme.Link;
 import java.net.URI;
 
 public interface LinkHandler {

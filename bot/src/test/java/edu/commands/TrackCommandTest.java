@@ -4,6 +4,7 @@ import com.pengrad.telegrambot.model.Chat;
 import com.pengrad.telegrambot.model.Message;
 import com.pengrad.telegrambot.model.Update;
 import com.pengrad.telegrambot.request.SendMessage;
+import edu.java.bot.clients.ScrapperLinkWebClient;
 import edu.java.bot.commands.TrackCommand;
 import edu.java.bot.link.GitHubLink;
 import edu.java.bot.link.Link;
@@ -11,16 +12,23 @@ import edu.java.bot.link.LinkValidator;
 import edu.java.bot.link.StackOverflowLink;
 import java.util.Arrays;
 import java.util.List;
+import groovyjarjarpicocli.CommandLine;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
+import org.mockito.Mock;
+import org.mockito.junit.jupiter.MockitoExtension;
 import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
+@ExtendWith(MockitoExtension.class)
 public class TrackCommandTest {
+    @Mock
+    ScrapperLinkWebClient scrapperLinkWebClient;
     LinkValidator linkValidator;
     TrackCommand trackCommand;
 
@@ -28,7 +36,7 @@ public class TrackCommandTest {
     public void setup() {
         List<Link> listLinks = Arrays.asList(new StackOverflowLink(), new GitHubLink());
         linkValidator = new LinkValidator(listLinks);
-        trackCommand = new TrackCommand(linkValidator);
+        trackCommand = new TrackCommand(scrapperLinkWebClient, linkValidator);
     }
 
     @Test

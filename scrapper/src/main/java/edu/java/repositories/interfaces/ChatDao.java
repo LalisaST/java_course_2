@@ -1,6 +1,6 @@
 package edu.java.repositories.interfaces;
 
-import edu.java.model.Chat;
+import edu.java.model.scheme.Chat;
 import java.util.List;
 
 public interface ChatDao {

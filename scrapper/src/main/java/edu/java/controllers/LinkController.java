@@ -4,7 +4,7 @@ import edu.java.dto.scrapper.AddLinkRequest;
 import edu.java.dto.scrapper.LinkResponse;
 import edu.java.dto.scrapper.ListLinksResponse;
 import edu.java.dto.scrapper.RemoveLinkRequest;
-import edu.java.services.jdbc.JdbcLinkService;
+import edu.java.services.interfaces.LinkService;
 import jakarta.validation.Valid;
 import jakarta.validation.constraints.NotNull;
 import lombok.RequiredArgsConstructor;
@@ -22,11 +22,11 @@ import org.springframework.web.bind.annotation.RestController;
 @RequestMapping("/links")
 @RestController
 public class LinkController {
-    private final JdbcLinkService jdbcLinkService;
+    private final LinkService linkService;
 
     @GetMapping
     public ListLinksResponse getAllLinks(@RequestHeader("Tg-Chat-Id") @NotNull Long id) {
-        return jdbcLinkService.getLinks(id);
+        return linkService.getLinks(id);
     }
 
     @PostMapping
@@ -34,7 +34,7 @@ public class LinkController {
         @RequestHeader("Tg-Chat-Id") @NotNull Long id,
         @RequestBody @Valid AddLinkRequest addLinkRequest
     ) {
-        return jdbcLinkService.addLink(id, addLinkRequest);
+        return linkService.addLink(id, addLinkRequest);
     }
 
     @DeleteMapping
@@ -42,6 +42,6 @@ public class LinkController {
         @RequestHeader("Tg-Chat-Id") @NotNull Long id,
         @RequestBody @Valid RemoveLinkRequest removeLinkRequest
     ) {
-        return jdbcLinkService.deleteLink(id, removeLinkRequest);
+        return linkService.deleteLink(id, removeLinkRequest);
     }
 }

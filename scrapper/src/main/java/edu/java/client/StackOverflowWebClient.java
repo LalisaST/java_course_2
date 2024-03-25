@@ -28,7 +28,7 @@ public class StackOverflowWebClient implements StackOverflowClient {
     public StackOverflowResponse fetchQuestion(@NotNull Long questionId) {
         return webClient
             .get()
-            .uri("/questions/{questionId}", questionId)
+            .uri("/questions/{questionId}?site=stackoverflow", questionId)
             .retrieve()
             .bodyToMono(StackOverflowResponse.class)
             .block();
@@ -38,7 +38,7 @@ public class StackOverflowWebClient implements StackOverflowClient {
     public StackOverflowAnswer fetchAnswers(@NotNull Long questionId) {
         return webClient
             .get()
-            .uri("/questions/{questionId}/answers", questionId)
+            .uri("/questions/{questionId}/answers?site=stackoverflow", questionId)
             .retrieve()
             .bodyToMono(StackOverflowAnswer.class)
             .block();
@@ -48,7 +48,7 @@ public class StackOverflowWebClient implements StackOverflowClient {
     public StackOverflowComment fetchComments(@NotNull Long questionId) {
         return webClient
             .get()
-            .uri("/questions/{questionId}/comments", questionId)
+            .uri("/questions/{questionId}/comments?site=stackoverflow", questionId)
             .retrieve()
             .bodyToMono(StackOverflowComment.class)
             .block();

@@ -4,13 +4,15 @@ import com.github.tomakehurst.wiremock.WireMockServer;
 import com.github.tomakehurst.wiremock.client.WireMock;
 import com.github.tomakehurst.wiremock.core.WireMockConfiguration;
 import edu.java.client.StackOverflowWebClient;
-import edu.java.model.Link;
-import edu.java.model.Type;
+import edu.java.model.scheme.Link;
+import edu.java.model.scheme.Type;
 import edu.java.scheduler.linkhandler.HandlerResult;
 import edu.java.scheduler.linkhandler.impl.StackOverflowLinkHandler;
 import java.net.URI;
 import java.time.OffsetDateTime;
 import java.time.ZoneOffset;
+import edu.java.services.DefaultLinkService;
+import lombok.RequiredArgsConstructor;
 import org.junit.jupiter.api.AfterAll;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.DisplayName;
@@ -60,20 +62,20 @@ public class StackOverflowLinkHandlerTest {
         );
 
         OffsetDateTime lastModified = OffsetDateTime.of(2024, 4, 21, 0, 0, 0, 0, ZoneOffset.UTC);
-        stubFor(get(urlEqualTo("/questions/" + 2003505))
+        stubFor(get(urlEqualTo("/questions/" + 2003505 +"?site=stackoverflow"))
             .willReturn(aResponse()
                 .withStatus(200)
                 .withHeader("Content-Type", MediaType.APPLICATION_JSON_VALUE)
                 .withBody(
                     "{\"items\": [{\"link\": \"" + link.url() + "\", \"last_activity_date\": \"" + lastModified + "\"}]}")));
 
-        stubFor(get(urlEqualTo("/questions/" + 2003505 + "/answers"))
+        stubFor(get(urlEqualTo("/questions/" + 2003505 + "/answers?site=stackoverflow"))
             .willReturn(aResponse()
                 .withStatus(200)
                 .withHeader("Content-Type", MediaType.APPLICATION_JSON_VALUE)
                 .withBody("{\"items\": [{}]}")));
 
-        stubFor(get(urlEqualTo("/questions/" + 2003505 + "/comments"))
+        stubFor(get(urlEqualTo("/questions/" + 2003505 + "/comments?site=stackoverflow"))
             .willReturn(aResponse()
                 .withStatus(200)
                 .withHeader("Content-Type", MediaType.APPLICATION_JSON_VALUE)
@@ -93,19 +95,19 @@ public class StackOverflowLinkHandlerTest {
             lastModified, lastModified, Type.GITHUB,0, 0, 0
         );
 
-        stubFor(get(urlEqualTo("/questions/" + 2003505))
+        stubFor(get(urlEqualTo("/questions/" + 2003505 + "?site=stackoverflow"))
             .willReturn(aResponse()
                 .withStatus(200)
                 .withHeader("Content-Type", MediaType.APPLICATION_JSON_VALUE)
                 .withBody(
                     "{\"items\": [{\"link\": \"" + link.url() + "\", \"last_activity_date\": \"" + lastModified + "\"}]}")));
-        stubFor(get(urlEqualTo("/questions/" + 2003505 + "/answers"))
+        stubFor(get(urlEqualTo("/questions/" + 2003505 + "/answers?site=stackoverflow"))
             .willReturn(aResponse()
                 .withStatus(200)
                 .withHeader("Content-Type", MediaType.APPLICATION_JSON_VALUE)
                 .withBody("{\"items\": []}")));
 
-        stubFor(get(urlEqualTo("/questions/" + 2003505 + "/comments"))
+        stubFor(get(urlEqualTo("/questions/" + 2003505 + "/comments?site=stackoverflow"))
             .willReturn(aResponse()
                 .withStatus(200)
                 .withHeader("Content-Type", MediaType.APPLICATION_JSON_VALUE)

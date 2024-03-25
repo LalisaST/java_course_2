@@ -1,7 +1,7 @@
 package edu.java.repositories.interfaces;
 
-import edu.java.model.Link;
-import edu.java.model.Type;
+import edu.java.model.scheme.Link;
+import edu.java.model.scheme.Type;
 import java.net.URI;
 import java.time.OffsetDateTime;
 import java.util.List;

@@ -1,6 +1,6 @@
 package edu.java.controllers;
 
-import edu.java.services.jdbc.JdbcTgChatService;
+import edu.java.services.interfaces.TgChatService;
 import jakarta.validation.constraints.NotNull;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -16,17 +16,17 @@ import org.springframework.web.bind.annotation.RestController;
 @RestController
 public class TgChatController {
     private static final String CHAT_STRING = "CHAT";
-    private final JdbcTgChatService jdbcTgChatService;
+    private final TgChatService tgChatService;
 
     @PostMapping("/{id}")
     public void registrationChat(@PathVariable @NotNull Long id) {
-        jdbcTgChatService.registerChat(id);
+        tgChatService.registerChat(id);
         log.info(CHAT_STRING + id + "is registered");
     }
 
     @DeleteMapping("/{id}")
     public void deleteChat(@PathVariable @NotNull Long id) {
-        jdbcTgChatService.deleteChat(id);
+        tgChatService.deleteChat(id);
         log.info(CHAT_STRING + id + "deleted");
     }
 }

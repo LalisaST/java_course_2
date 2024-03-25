@@ -4,17 +4,28 @@ import com.pengrad.telegrambot.model.Chat;
 import com.pengrad.telegrambot.model.Message;
 import com.pengrad.telegrambot.model.Update;
 import com.pengrad.telegrambot.request.SendMessage;
+import edu.java.bot.clients.ScrapperLinkWebClient;
 import edu.java.bot.commands.ListCommand;
+import edu.java.bot.dto.scrapper.LinkResponse;
+import edu.java.bot.dto.scrapper.ListLinksResponse;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
+import org.mockito.Mock;
+import org.mockito.junit.jupiter.MockitoExtension;
+import java.net.URI;
+import java.util.List;
 import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
+@ExtendWith(MockitoExtension.class)
 public class ListCommandTest {
-    ListCommand listCommand = new ListCommand();
+    @Mock
+    ScrapperLinkWebClient scrapperLinkWebClient;
+    ListCommand listCommand = new ListCommand(scrapperLinkWebClient);
 
     @Test
     @DisplayName("Проверка функции command")
@@ -31,13 +42,17 @@ public class ListCommandTest {
     @Test
     @DisplayName("Проверка функции handle")
     public void testHandle() {
+        ListCommand listCommand = new ListCommand(scrapperLinkWebClient);
         Update update = mock(Update.class);
         Message message = mock(Message.class);
         when(message.chat()).thenReturn(mock(Chat.class));
         when(update.message()).thenReturn(message);
         when(message.chat().id()).thenReturn(123L);
+        LinkResponse linkResponse = new LinkResponse(1L, URI.create("url"));
+        ListLinksResponse listLinksResponse = new ListLinksResponse(List.of(linkResponse), 1);
+        when(scrapperLinkWebClient.getAllLinks(123L)).thenReturn(listLinksResponse);
 
-        String MESSAGE = "List of tracked links: ";
+        String MESSAGE = "1 tracked links: url\n";
 
         SendMessage result = listCommand.handle(update);
         SendMessage sendMessage = new SendMessage(123L, MESSAGE);

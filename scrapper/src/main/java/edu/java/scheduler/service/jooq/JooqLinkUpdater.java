@@ -7,9 +7,7 @@ import edu.java.scheduler.service.DefaultLinkUpdater;
 import edu.java.services.jooq.JooqLinkService;
 import edu.java.services.jooq.JooqTgChatService;
 import java.util.List;
-import org.springframework.stereotype.Service;
 
-@Service
 public class JooqLinkUpdater extends DefaultLinkUpdater {
     public JooqLinkUpdater(
         ApplicationConfig applicationConfig,

@@ -1,5 +1,6 @@
 package edu.java.configuration;
 
+import edu.java.configuration.utils.AccessType;
 import jakarta.validation.constraints.NotNull;
 import java.time.Duration;
 import org.springframework.boot.context.properties.ConfigurationProperties;
@@ -12,6 +13,9 @@ public record ApplicationConfig(
     @Bean
     @NotNull
     Scheduler scheduler,
+
+    @NotNull
+    AccessType databaseAccessType,
 
     @NotNull
     ClientBaseUrl clientBaseUrl

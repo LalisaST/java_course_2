@@ -1,6 +1,6 @@
 package edu.java.scrapper.repositories;
 
-import edu.java.model.Chat;
+import edu.java.model.scheme.Chat;
 import edu.java.repositories.interfaces.ChatDao;
 import edu.java.repositories.jdbc.JdbcChatDao;
 import edu.java.repositories.jooq.JooqChatDao;

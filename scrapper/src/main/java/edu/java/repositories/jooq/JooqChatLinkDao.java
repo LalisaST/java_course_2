@@ -1,6 +1,6 @@
 package edu.java.repositories.jooq;
 
-import edu.java.model.ChatLink;
+import edu.java.model.scheme.ChatLink;
 import edu.java.repositories.interfaces.ChatLinkDao;
 import java.util.List;
 import java.util.Optional;

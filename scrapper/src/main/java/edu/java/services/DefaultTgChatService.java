@@ -2,7 +2,7 @@ package edu.java.services;
 
 import edu.java.exception.NotFoundException;
 import edu.java.exception.RepeatedRegistrationException;
-import edu.java.model.Chat;
+import edu.java.model.scheme.Chat;
 import edu.java.repositories.interfaces.ChatDao;
 import edu.java.repositories.interfaces.ChatLinkDao;
 import edu.java.services.interfaces.TgChatService;

@@ -3,11 +3,12 @@ package edu.java.scheduler.service;
 import edu.java.client.BotWebClient;
 import edu.java.configuration.ApplicationConfig;
 import edu.java.dto.bot.LinkUpdateRequest;
-import edu.java.model.Link;
+import edu.java.model.scheme.Link;
 import edu.java.scheduler.linkhandler.HandlerResult;
 import edu.java.scheduler.linkhandler.LinkHandler;
 import edu.java.services.DefaultLinkService;
 import edu.java.services.DefaultTgChatService;
+import java.time.OffsetDateTime;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
 
@@ -33,24 +34,24 @@ public class DefaultLinkUpdater implements LinkUpdater {
 
     private void processUpdate(LinkHandler linkHandler, Link link) {
         HandlerResult result = linkHandler.updateLink(link);
-        List<Long> chatList = defaultTgChatService.findChatIdByLinkId(link.id());
+        Long linkId = link.id();
+        List<Long> chatList = defaultTgChatService.findChatIdByLinkId(linkId);
 
         if (result.update()) {
             LinkUpdateRequest linkUpdateRequest =
-                new LinkUpdateRequest(link.id(), link.url(), result.description(), chatList);
+                new LinkUpdateRequest(linkId, link.url(), result.description(), chatList);
+            updateData(linkId, result);
 
             botWebClient.update(linkUpdateRequest);
-
-            for (Long id : chatList) {
-                defaultLinkService.updateLastUpdate(id, result.time());
-                defaultLinkService.updateCommentCount(id, result.commentCount());
-                defaultLinkService.updateAnswerCount(id, result.answerCount());
-                defaultLinkService.updateCommitCount(id, result.commitCount());
-            }
         }
 
-        for (Long id : chatList) {
-            defaultLinkService.updateLastCheck(id, result.time());
-        }
+        defaultLinkService.updateLastCheck(linkId, OffsetDateTime.now());
+    }
+
+    private void updateData(Long linkId, HandlerResult result) {
+        defaultLinkService.updateLastUpdate(linkId, result.time());
+        defaultLinkService.updateCommitCount(linkId, result.commitCount());
+        defaultLinkService.updateAnswerCount(linkId, result.answerCount());
+        defaultLinkService.updateCommentCount(linkId, result.commentCount());
     }
 }
