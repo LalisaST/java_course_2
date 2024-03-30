@@ -1,8 +1,8 @@
 package edu.java.scrapper;
 
-import org.junit.jupiter.api.Test;
 import java.sql.Connection;
 import java.sql.SQLException;
+import org.junit.jupiter.api.Test;
 import static java.sql.DriverManager.getConnection;
 import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
 

@@ -1,15 +1,15 @@
 package edu.java.scrapper.scheduler.linkupdaters;
 
-import edu.java.client.BotWebClient;
-import edu.java.configuration.ApplicationConfig;
-import edu.java.model.entity.Link;
-import edu.java.model.scheme.Type;
-import edu.java.scheduler.linkhandler.HandlerResult;
-import edu.java.scheduler.linkhandler.impl.GitHubLinkHandler;
-import edu.java.scheduler.service.LinkUpdater;
-import edu.java.scheduler.service.jpa.JpaLinkUpdater;
-import edu.java.services.jpa.JpaLinkService;
-import edu.java.services.jpa.JpaTgChatService;
+import edu.java.scrapper.client.BotWebClient;
+import edu.java.scrapper.configuration.ApplicationConfig;
+import edu.java.scrapper.model.entity.Link;
+import edu.java.scrapper.model.scheme.Type;
+import edu.java.scrapper.scheduler.linkhandler.HandlerResult;
+import edu.java.scrapper.scheduler.linkhandler.impl.GitHubLinkHandler;
+import edu.java.scrapper.scheduler.service.LinkUpdater;
+import edu.java.scrapper.scheduler.service.jpa.JpaLinkUpdater;
+import edu.java.scrapper.services.jpa.JpaLinkService;
+import edu.java.scrapper.services.jpa.JpaTgChatService;
 import java.net.URI;
 import java.time.Duration;
 import java.time.OffsetDateTime;
@@ -44,7 +44,7 @@ public class JpaLinkUpdaterTest {
         when(applicationConfig.scheduler()).thenReturn(new ApplicationConfig.Scheduler(false, time, time));
 
         OffsetDateTime offsetDateTime = OffsetDateTime.now();
-        edu.java.model.scheme.Link linkScheme = new edu.java.model.scheme.Link(
+        var linkScheme = new edu.java.scrapper.model.scheme.Link(
             1L,
             URI.create("https://github.com/LalisaST/java_course_2"),
             offsetDateTime,

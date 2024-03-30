@@ -1,9 +1,8 @@
 package edu.java.scrapper.repositories.jpa;
 
-import edu.java.model.entity.Link;
-import edu.java.model.scheme.Type;
-import edu.java.repositories.jpa.JpaLinkRepository;
 import edu.java.scrapper.IntegrationTest;
+import edu.java.scrapper.model.entity.Link;
+import edu.java.scrapper.model.scheme.Type;
 import jakarta.transaction.Transactional;
 import java.net.URI;
 import java.time.OffsetDateTime;

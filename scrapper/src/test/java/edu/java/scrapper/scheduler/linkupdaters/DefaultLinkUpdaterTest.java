@@ -1,15 +1,15 @@
 package edu.java.scrapper.scheduler.linkupdaters;
 
-import edu.java.client.BotWebClient;
-import edu.java.configuration.ApplicationConfig;
-import edu.java.model.scheme.Link;
-import edu.java.model.scheme.Type;
-import edu.java.scheduler.service.LinkUpdater;
-import edu.java.scheduler.linkhandler.impl.GitHubLinkHandler;
-import edu.java.scheduler.linkhandler.HandlerResult;
-import edu.java.scheduler.service.DefaultLinkUpdater;
-import edu.java.services.DefaultLinkService;
-import edu.java.services.DefaultTgChatService;
+import edu.java.scrapper.client.BotWebClient;
+import edu.java.scrapper.configuration.ApplicationConfig;
+import edu.java.scrapper.model.scheme.Link;
+import edu.java.scrapper.model.scheme.Type;
+import edu.java.scrapper.scheduler.linkhandler.HandlerResult;
+import edu.java.scrapper.scheduler.linkhandler.impl.GitHubLinkHandler;
+import edu.java.scrapper.scheduler.service.DefaultLinkUpdater;
+import edu.java.scrapper.scheduler.service.LinkUpdater;
+import edu.java.scrapper.services.DefaultLinkService;
+import edu.java.scrapper.services.DefaultTgChatService;
 import java.net.URI;
 import java.time.Duration;
 import java.time.OffsetDateTime;

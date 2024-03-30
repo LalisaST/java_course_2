@@ -1,10 +1,9 @@
 package edu.java.scrapper.services.jpa;
 
-import edu.java.exception.NotFoundException;
-import edu.java.exception.RepeatedRegistrationException;
-import edu.java.repositories.jpa.JpaChatRepository;
-import edu.java.repositories.jpa.JpaLinkRepository;
-import edu.java.services.jpa.JpaTgChatService;
+import edu.java.scrapper.exception.NotFoundException;
+import edu.java.scrapper.exception.RepeatedRegistrationException;
+import edu.java.scrapper.repositories.jpa.JpaChatRepository;
+import edu.java.scrapper.repositories.jpa.JpaLinkRepository;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;

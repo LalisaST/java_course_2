@@ -1,19 +1,18 @@
 package edu.java.scrapper.services;
 
-import edu.java.exception.NotFoundException;
-import edu.java.exception.RepeatedRegistrationException;
-import edu.java.model.scheme.Chat;
-import edu.java.repositories.jdbc.JdbcChatDao;
-import edu.java.repositories.jdbc.JdbcChatLinkDao;
-import edu.java.services.DefaultTgChatService;
+import edu.java.scrapper.exception.NotFoundException;
+import edu.java.scrapper.exception.RepeatedRegistrationException;
+import edu.java.scrapper.model.scheme.Chat;
+import edu.java.scrapper.repositories.jdbc.JdbcChatDao;
+import edu.java.scrapper.repositories.jdbc.JdbcChatLinkDao;
+import java.time.OffsetDateTime;
+import java.util.List;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
-import java.time.OffsetDateTime;
-import java.util.List;
 import static org.assertj.core.api.AssertionsForClassTypes.assertThatThrownBy;
 import static org.junit.jupiter.api.Assertions.assertDoesNotThrow;
 import static org.mockito.Mockito.when;

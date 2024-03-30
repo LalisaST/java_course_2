@@ -1,8 +1,7 @@
 package edu.java.scrapper.repositories.jpa;
 
-import edu.java.model.entity.Chat;
-import edu.java.repositories.jpa.JpaChatRepository;
 import edu.java.scrapper.IntegrationTest;
+import edu.java.scrapper.model.entity.Chat;
 import jakarta.transaction.Transactional;
 import java.util.List;
 import org.junit.jupiter.api.DisplayName;

@@ -3,21 +3,27 @@ package edu.java.scrapper.client;
 import com.github.tomakehurst.wiremock.WireMockServer;
 import com.github.tomakehurst.wiremock.client.WireMock;
 import com.github.tomakehurst.wiremock.core.WireMockConfiguration;
-import edu.java.client.StackOverflowWebClient;
-import edu.java.dto.stackoverflow.StackOverflowAnswer;
-import edu.java.dto.stackoverflow.StackOverflowComment;
-import edu.java.dto.stackoverflow.StackOverflowResponse;
+import edu.java.scrapper.configuration.ApplicationConfig;
+import edu.java.scrapper.dto.stackoverflow.StackOverflowAnswer;
+import edu.java.scrapper.dto.stackoverflow.StackOverflowComment;
+import edu.java.scrapper.dto.stackoverflow.StackOverflowResponse;
+import edu.java.scrapper.retry.LinearRetryFilter;
+import java.time.Duration;
 import java.time.OffsetDateTime;
 import java.time.ZoneOffset;
 import java.util.List;
+import java.util.Set;
 import org.junit.jupiter.api.AfterAll;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.core.codec.DecodingException;
 import org.springframework.http.MediaType;
+import org.springframework.web.reactive.function.client.ExchangeFilterFunction;
+import org.springframework.web.reactive.function.client.WebClientResponseException;
 import static com.github.tomakehurst.wiremock.client.WireMock.aResponse;
 import static com.github.tomakehurst.wiremock.client.WireMock.get;
+import static com.github.tomakehurst.wiremock.client.WireMock.getRequestedFor;
 import static com.github.tomakehurst.wiremock.client.WireMock.stubFor;
 import static com.github.tomakehurst.wiremock.client.WireMock.urlEqualTo;
 import static org.assertj.core.api.AssertionsForClassTypes.assertThatThrownBy;
@@ -25,6 +31,15 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 
 public class StackOverflowWebClientTest {
     private static WireMockServer wireMockServer;
+    private final ExchangeFilterFunction exchangeFilterFunction = new LinearRetryFilter(
+        new ApplicationConfig.Client(
+            "url",
+            new ApplicationConfig.Client.Retry(ApplicationConfig.Client.BackoffPolicy.LINEAR,
+                2,
+                Duration.ofSeconds(2),
+                Set.of(503)
+            )
+        ));
 
     @BeforeAll
     public static void setUp() {
@@ -54,7 +69,7 @@ public class StackOverflowWebClientTest {
                 .withBody("{\"items\": [{\"link\": \"" + link + "\", \"last_activity_date\": \"" + lastModified + "\"}]}")));
 
         StackOverflowWebClient stackOverflowWebClient =
-            StackOverflowWebClient.create("http://localhost:" + wireMockServer.port());
+            StackOverflowWebClient.create("http://localhost:" + wireMockServer.port(), exchangeFilterFunction);
         StackOverflowResponse actualResponse = stackOverflowWebClient.fetchQuestion(questionId);
 
         assertEquals(expectedResponse, actualResponse);
@@ -72,7 +87,7 @@ public class StackOverflowWebClientTest {
                 .withBody("aboba")));
 
         StackOverflowWebClient stackOverflowWebClient =
-            StackOverflowWebClient.create("http://localhost:" + wireMockServer.port());
+            StackOverflowWebClient.create("http://localhost:" + wireMockServer.port(), exchangeFilterFunction);
 
         assertThatThrownBy(() -> stackOverflowWebClient.fetchQuestion(questionId)).isInstanceOf(DecodingException.class);
     }
@@ -91,7 +106,7 @@ public class StackOverflowWebClientTest {
                 .withBody("{\"items\": []}")));
 
         StackOverflowWebClient stackOverflowWebClient =
-            StackOverflowWebClient.create("http://localhost:" + wireMockServer.port());
+            StackOverflowWebClient.create("http://localhost:" + wireMockServer.port(), exchangeFilterFunction);
         StackOverflowAnswer actualResponse = stackOverflowWebClient.fetchAnswers(questionId);
 
         assertEquals(expectedResponse, actualResponse);
@@ -111,9 +126,27 @@ public class StackOverflowWebClientTest {
                 .withBody("{\"items\": []}")));
 
         StackOverflowWebClient stackOverflowWebClient =
-            StackOverflowWebClient.create("http://localhost:" + wireMockServer.port());
+            StackOverflowWebClient.create("http://localhost:" + wireMockServer.port(), exchangeFilterFunction);
         StackOverflowComment actualResponse = stackOverflowWebClient.fetchComments(questionId);
 
         assertEquals(expectedResponse, actualResponse);
+    }
+
+    @Test
+    @DisplayName("Проверка retry")
+    void clientRetry() {
+        Long questionId = 123L;
+
+        stubFor(get(urlEqualTo("/questions/" + questionId +"?site=stackoverflow"))
+            .willReturn(aResponse()
+                .withStatus(503)));
+
+        StackOverflowWebClient stackOverflowWebClient =
+            StackOverflowWebClient.create("http://localhost:" + wireMockServer.port(), exchangeFilterFunction);
+
+        assertThatThrownBy(() -> stackOverflowWebClient.fetchQuestion(questionId)).isInstanceOf(
+            WebClientResponseException.class);
+
+        WireMock.verify(3, getRequestedFor(urlEqualTo("/questions/" + questionId +"?site=stackoverflow")));
     }
 }

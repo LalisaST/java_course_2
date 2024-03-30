@@ -1,10 +1,10 @@
 package edu.java.scrapper.repositories;
 
-import edu.java.model.scheme.Chat;
-import edu.java.repositories.interfaces.ChatDao;
-import edu.java.repositories.jdbc.JdbcChatDao;
-import edu.java.repositories.jooq.JooqChatDao;
 import edu.java.scrapper.IntegrationTest;
+import edu.java.scrapper.model.scheme.Chat;
+import edu.java.scrapper.repositories.interfaces.ChatDao;
+import edu.java.scrapper.repositories.jdbc.JdbcChatDao;
+import edu.java.scrapper.repositories.jooq.JooqChatDao;
 import java.util.List;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.TestInstance;

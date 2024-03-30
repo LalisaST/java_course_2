@@ -5,10 +5,26 @@ app:
     force-check-delay: 10000s
   database-access-type: jpa
 
-  client-base-url:
-    github-url: https://api.github.com
-    stackoverflow-url: https://api.stackexchange.com/2.3
-    bot-url: http://localhost:8090
+  bot-client:
+    url: http://localhost:8090
+    retry:
+      backoff-policy: fixed
+      max-attempts: 5
+      init-delay: 5s
+      codes: 503
+  stackoverflow-client:
+    retry:
+      backoff-policy: fixed
+      max-attempts: 5
+      init-delay: 5s
+      codes: 503
+  github-client:
+    retry:
+      backoff-policy: fixed
+      max-attempts: 5
+      init-delay: 5s
+      codes: 503
+
 
 spring:
   application:
@@ -17,6 +33,11 @@ spring:
     url: jdbc:postgresql://localhost:5432/scrapper
     username: postgres
     password: postgres
+  cache:
+    cache-names:
+      - rate-limit-buckets
+    caffeine:
+      spec: maximumSize=100000,expireAfterAccess=3600s
 
 server:
   port: 8080
@@ -27,3 +48,16 @@ logging:
 springdoc:
   swagger-ui:
     path: /swagger-ui
+
+bucket4j:
+  enabled: true
+  filters:
+    - cache-name: rate-limit-buckets
+      url: .*
+      http-response-body: "{ \"status\": 429, \"error\": \"Too Many Requests\", \"message\": \"You have exhausted your API Request Quota\" }"
+      rate-limits:
+        - cache-key: getRemoteAddr()
+          bandwidths:
+            - capacity: 100
+              time: 1
+              unit: hours

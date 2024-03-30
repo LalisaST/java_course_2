@@ -38,7 +38,7 @@ public class JooqCodegen {
             .withPojos(true);
 
         Target target = new Target()
-            .withPackageName("edu.java.domain.jooq")
+            .withPackageName("edu.java.scrapper.domain.jooq")
             .withDirectory("scrapper/src/main/java");
 
         String postgres = "postgres";
