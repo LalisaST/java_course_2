@@ -13,6 +13,7 @@ import liquibase.database.DatabaseFactory;
 import liquibase.database.jvm.JdbcConnection;
 import liquibase.exception.LiquibaseException;
 import liquibase.resource.DirectoryResourceAccessor;
+import org.springframework.test.annotation.DirtiesContext;
 import org.springframework.test.context.DynamicPropertyRegistry;
 import org.springframework.test.context.DynamicPropertySource;
 import org.testcontainers.containers.JdbcDatabaseContainer;
@@ -21,6 +22,7 @@ import org.testcontainers.junit.jupiter.Testcontainers;
 import static java.sql.DriverManager.getConnection;
 
 @Testcontainers
+@DirtiesContext
 public abstract class IntegrationTest {
     public static PostgreSQLContainer<?> POSTGRES;
 
@@ -61,5 +63,6 @@ public abstract class IntegrationTest {
         registry.add("spring.datasource.username", POSTGRES::getUsername);
         registry.add("spring.datasource.password", POSTGRES::getPassword);
         registry.add("spring.liquibase.enabled", () -> false);
+        registry.add("app.use-queue", () -> false);
     }
 }

@@ -7,6 +7,26 @@ app:
       max-attempts: 5
       init-delay: 5s
       codes: 503
+  kafka:
+    consumer:
+      group-id: group
+      auto-offset-reset: latest
+      max-poll-interval-ms: 300_000
+      concurrency: 1
+      bootstrap-servers: localhost:9092
+    producer:
+      acks-mode: all
+      lingerMs: 12_000
+      bootstrap-servers: localhost:9092
+    topic:
+      name: "updates_queue"
+      partitions: 3
+      replicas: 1
+    topic-dlq:
+      name: "updates_dlq"
+      partitions: 3
+      replicas: 1
+
 
 spring:
   application:

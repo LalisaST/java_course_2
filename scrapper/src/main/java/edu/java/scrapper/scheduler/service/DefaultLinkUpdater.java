@@ -1,6 +1,5 @@
 package edu.java.scrapper.scheduler.service;
 
-import edu.java.scrapper.client.BotWebClient;
 import edu.java.scrapper.configuration.ApplicationConfig;
 import edu.java.scrapper.dto.bot.LinkUpdateRequest;
 import edu.java.scrapper.model.scheme.Link;
@@ -8,6 +7,7 @@ import edu.java.scrapper.scheduler.linkhandler.HandlerResult;
 import edu.java.scrapper.scheduler.linkhandler.LinkHandler;
 import edu.java.scrapper.services.DefaultLinkService;
 import edu.java.scrapper.services.DefaultTgChatService;
+import edu.java.scrapper.services.interfaces.NotificationService;
 import java.time.OffsetDateTime;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
@@ -18,7 +18,7 @@ public class DefaultLinkUpdater implements LinkUpdater {
     private final DefaultLinkService defaultLinkService;
     private final DefaultTgChatService defaultTgChatService;
     private final List<LinkHandler> linkHandlers;
-    private final BotWebClient botWebClient;
+    private final NotificationService service;
 
     @Override
     public void update() {
@@ -42,7 +42,7 @@ public class DefaultLinkUpdater implements LinkUpdater {
                 new LinkUpdateRequest(linkId, link.url(), result.description(), chatList);
             updateData(linkId, result);
 
-            botWebClient.update(linkUpdateRequest);
+            service.send(linkUpdateRequest);
         }
 
         defaultLinkService.updateLastCheck(linkId, OffsetDateTime.now());

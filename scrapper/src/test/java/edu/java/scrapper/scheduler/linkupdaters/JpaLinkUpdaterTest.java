@@ -1,6 +1,5 @@
 package edu.java.scrapper.scheduler.linkupdaters;
 
-import edu.java.scrapper.client.BotWebClient;
 import edu.java.scrapper.configuration.ApplicationConfig;
 import edu.java.scrapper.model.entity.Link;
 import edu.java.scrapper.model.scheme.Type;
@@ -8,6 +7,7 @@ import edu.java.scrapper.scheduler.linkhandler.HandlerResult;
 import edu.java.scrapper.scheduler.linkhandler.impl.GitHubLinkHandler;
 import edu.java.scrapper.scheduler.service.LinkUpdater;
 import edu.java.scrapper.scheduler.service.jpa.JpaLinkUpdater;
+import edu.java.scrapper.services.interfaces.NotificationService;
 import edu.java.scrapper.services.jpa.JpaLinkService;
 import edu.java.scrapper.services.jpa.JpaTgChatService;
 import java.net.URI;
@@ -35,7 +35,7 @@ public class JpaLinkUpdaterTest {
     @Mock
     private GitHubLinkHandler gitHubLinkHandler;
     @Mock
-    private BotWebClient botWebClient;
+    private NotificationService service;
 
     @Test
     @DisplayName("Проверка функции update")
@@ -81,7 +81,7 @@ public class JpaLinkUpdaterTest {
             jpaLinkService,
             jpaTgChatService,
             List.of(gitHubLinkHandler),
-            botWebClient
+            service
         );
         linkUpdater.update();
 

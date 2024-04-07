@@ -4,6 +4,15 @@ app:
     interval: 10s
     force-check-delay: 10000s
   database-access-type: jpa
+  kafka:
+    producer:
+      bootstrap-servers: localhost:9092
+      acks-mode: all
+      lingerMs: 12_000
+    topic:
+      name: "updates_queue"
+      partitions: 10
+      replicas: 1
 
   bot-client:
     url: http://localhost:8090
@@ -24,6 +33,7 @@ app:
       max-attempts: 5
       init-delay: 5s
       codes: 503
+  use-queue: true
 
 
 spring:
