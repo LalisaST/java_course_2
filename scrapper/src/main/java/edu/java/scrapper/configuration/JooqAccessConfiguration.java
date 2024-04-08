@@ -1,11 +1,11 @@
 package edu.java.scrapper.configuration;
 
-import edu.java.scrapper.client.BotWebClient;
 import edu.java.scrapper.repositories.jooq.JooqChatDao;
 import edu.java.scrapper.repositories.jooq.JooqChatLinkDao;
 import edu.java.scrapper.repositories.jooq.JooqLinkDao;
 import edu.java.scrapper.scheduler.linkhandler.LinkHandler;
 import edu.java.scrapper.scheduler.service.jooq.JooqLinkUpdater;
+import edu.java.scrapper.services.interfaces.NotificationService;
 import edu.java.scrapper.services.jooq.JooqLinkService;
 import edu.java.scrapper.services.jooq.JooqTgChatService;
 import java.util.List;
@@ -36,8 +36,8 @@ public class JooqAccessConfiguration {
         JooqLinkService jooqLinkService,
         JooqTgChatService jooqTgChatService,
         List<LinkHandler> linkHandlers,
-        BotWebClient botWebClient
+        NotificationService service
     ) {
-        return new JooqLinkUpdater(applicationConfig, jooqLinkService, jooqTgChatService, linkHandlers, botWebClient);
+        return new JooqLinkUpdater(applicationConfig, jooqLinkService, jooqTgChatService, linkHandlers, service);
     }
 }

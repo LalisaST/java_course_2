@@ -12,10 +12,41 @@ import org.springframework.validation.annotation.Validated;
 public record ApplicationConfig(
     @NotEmpty
     String telegramToken,
-
     @NotNull
-    Client scrapperClient
+    Client scrapperClient,
+    @NotNull
+    Kafka kafka
 ) {
+    public record Kafka(
+        @NotNull KafkaProducerProperties producer,
+        @NotNull KafkaConsumerProperties consumer,
+        @NotNull Topic topic,
+        @NotNull Topic topicDlq
+    ) {
+        public record KafkaConsumerProperties(
+            @NotNull String bootstrapServers,
+            @NotNull String groupId,
+            @NotNull String autoOffsetReset,
+            @NotNull Integer maxPollIntervalMs,
+            @NotNull Integer concurrency
+        ) {
+        }
+
+        public record KafkaProducerProperties(
+            @NotNull String bootstrapServers,
+            @NotNull String acksMode,
+            @NotNull Integer lingerMs
+        ) {
+        }
+
+        public record Topic(
+            @NotNull String name,
+            @NotNull Integer partitions,
+            @NotNull Integer replicas
+        ) {
+        }
+    }
+
     public record Client(String url, @NotNull Retry retry) {
         public record Retry(
             @NotNull

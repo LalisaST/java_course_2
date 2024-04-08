@@ -1,12 +1,12 @@
 package edu.java.scrapper.scheduler.service.jpa;
 
-import edu.java.scrapper.client.BotWebClient;
 import edu.java.scrapper.configuration.ApplicationConfig;
 import edu.java.scrapper.dto.bot.LinkUpdateRequest;
 import edu.java.scrapper.model.entity.Link;
 import edu.java.scrapper.scheduler.linkhandler.HandlerResult;
 import edu.java.scrapper.scheduler.linkhandler.LinkHandler;
 import edu.java.scrapper.scheduler.service.LinkUpdater;
+import edu.java.scrapper.services.interfaces.NotificationService;
 import edu.java.scrapper.services.jpa.JpaLinkService;
 import edu.java.scrapper.services.jpa.JpaTgChatService;
 import java.time.OffsetDateTime;
@@ -20,7 +20,7 @@ public class JpaLinkUpdater implements LinkUpdater {
     private final JpaLinkService jpaLinkService;
     private final JpaTgChatService jpaTgChatService;
     private final List<LinkHandler> linkHandlers;
-    private final BotWebClient botWebClient;
+    private final NotificationService service;
 
     @Override
     @Transactional
@@ -46,7 +46,7 @@ public class JpaLinkUpdater implements LinkUpdater {
                 new LinkUpdateRequest(linkId, link.getUrl(), result.description(), chatList);
 
             updateData(linkId, result);
-            botWebClient.update(linkUpdateRequest);
+            service.send(linkUpdateRequest);
         }
 
         jpaLinkService.updateLastCheck(linkId, OffsetDateTime.now());
