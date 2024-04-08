@@ -3,21 +3,24 @@ package edu.java.scrapper.scheduler.linkhanlers;
 import com.github.tomakehurst.wiremock.WireMockServer;
 import com.github.tomakehurst.wiremock.client.WireMock;
 import com.github.tomakehurst.wiremock.core.WireMockConfiguration;
-import edu.java.client.StackOverflowWebClient;
-import edu.java.model.scheme.Link;
-import edu.java.model.scheme.Type;
-import edu.java.scheduler.linkhandler.HandlerResult;
-import edu.java.scheduler.linkhandler.impl.StackOverflowLinkHandler;
+import edu.java.scrapper.client.StackOverflowWebClient;
+import edu.java.scrapper.configuration.ApplicationConfig;
+import edu.java.scrapper.model.scheme.Link;
+import edu.java.scrapper.model.scheme.Type;
+import edu.java.scrapper.retry.LinearRetryFilter;
+import edu.java.scrapper.scheduler.linkhandler.HandlerResult;
+import edu.java.scrapper.scheduler.linkhandler.impl.StackOverflowLinkHandler;
 import java.net.URI;
+import java.time.Duration;
 import java.time.OffsetDateTime;
 import java.time.ZoneOffset;
-import edu.java.services.DefaultLinkService;
-import lombok.RequiredArgsConstructor;
+import java.util.Set;
 import org.junit.jupiter.api.AfterAll;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.http.MediaType;
+import org.springframework.web.reactive.function.client.ExchangeFilterFunction;
 import static com.github.tomakehurst.wiremock.client.WireMock.aResponse;
 import static com.github.tomakehurst.wiremock.client.WireMock.get;
 import static com.github.tomakehurst.wiremock.client.WireMock.stubFor;
@@ -25,8 +28,17 @@ import static com.github.tomakehurst.wiremock.client.WireMock.urlEqualTo;
 import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
 
 public class StackOverflowLinkHandlerTest {
+    private final ExchangeFilterFunction exchangeFilterFunction = new LinearRetryFilter(
+        new ApplicationConfig.Client(
+            "url",
+            new ApplicationConfig.Client.Retry(ApplicationConfig.Client.BackoffPolicy.LINEAR,
+                2,
+                Duration.ofSeconds(2),
+                Set.of(503)
+            )
+        ));
     private final StackOverflowWebClient stackOverflowWebClient =
-        StackOverflowWebClient.create("http://localhost:" + wireMockServer.port());
+        StackOverflowWebClient.create("http://localhost:" + wireMockServer.port(), exchangeFilterFunction);
     private final StackOverflowLinkHandler stackOverflowLinkHandler =
         new StackOverflowLinkHandler(stackOverflowWebClient);
     private static WireMockServer wireMockServer;

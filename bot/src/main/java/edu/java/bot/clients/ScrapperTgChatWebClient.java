@@ -1,6 +1,7 @@
 package edu.java.bot.clients;
 
 import java.util.Objects;
+import org.springframework.web.reactive.function.client.ExchangeFilterFunction;
 import org.springframework.web.reactive.function.client.WebClient;
 
 public class ScrapperTgChatWebClient {
@@ -12,10 +13,11 @@ public class ScrapperTgChatWebClient {
         this.webClient = webClient;
     }
 
-    public static ScrapperTgChatWebClient create(String url) {
+    public static ScrapperTgChatWebClient create(String url, ExchangeFilterFunction exchangeFilterFunction) {
         WebClient webClient = WebClient
             .builder()
             .baseUrl(Objects.requireNonNullElse(url, DEFAULT_BASE_URL))
+            .filter(exchangeFilterFunction)
             .build();
 
         return new ScrapperTgChatWebClient(webClient);

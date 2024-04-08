@@ -7,6 +7,7 @@ import edu.java.bot.dto.scrapper.RemoveLinkRequest;
 import java.util.Objects;
 import org.springframework.http.HttpMethod;
 import org.springframework.web.reactive.function.BodyInserters;
+import org.springframework.web.reactive.function.client.ExchangeFilterFunction;
 import org.springframework.web.reactive.function.client.WebClient;
 
 public class ScrapperLinkWebClient {
@@ -19,10 +20,11 @@ public class ScrapperLinkWebClient {
         this.webClient = webClient;
     }
 
-    public static ScrapperLinkWebClient create(String url) {
+    public static ScrapperLinkWebClient create(String url, ExchangeFilterFunction exchangeFilterFunction) {
         WebClient webClient = WebClient
             .builder()
             .baseUrl(Objects.requireNonNullElse(url, DEFAULT_BASE_URL))
+            .filter(exchangeFilterFunction)
             .build();
 
         return new ScrapperLinkWebClient(webClient);
