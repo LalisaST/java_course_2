@@ -4,7 +4,6 @@ import edu.java.bot.Bot;
 import edu.java.bot.dto.bot.LinkUpdateRequest;
 import java.net.URI;
 import java.util.List;
-import io.micrometer.core.instrument.Counter;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -18,8 +17,6 @@ import static org.mockito.Mockito.verify;
 public class UpdateServiceTest {
     @Mock
     private Bot bot;
-    @Mock
-    private Counter counter;
 
     @Test
     @DisplayName("Проверка отправки обновления")
@@ -27,7 +24,7 @@ public class UpdateServiceTest {
         LinkUpdateRequest linkUpdateRequest =
             new LinkUpdateRequest(1L, URI.create("url"), "description", List.of(1L, 2L, 3L));
 
-        UpdateService updateService = new UpdateService(bot, counter);
+        UpdateService updateService = new UpdateService(bot);
         updateService.sendUpdate(linkUpdateRequest);
 
         verify(bot, times(3)).execute(any());
