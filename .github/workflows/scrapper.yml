@@ -9,7 +9,7 @@ on:
 
 env:
   REGISTRY: ghcr.io
-  IMAGE_NAME: https://github.com/lalisast/java_course_2/scrapper
+  IMAGE_NAME: lalisast/java_course_2/scrapper
 
 jobs:
   build:
