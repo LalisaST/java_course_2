@@ -11,6 +11,7 @@ import com.pengrad.telegrambot.response.BaseResponse;
 import edu.java.bot.commands.Command;
 import edu.java.bot.configuration.ApplicationConfig;
 import edu.java.bot.user.DefaultUserMessageProcessor;
+import io.micrometer.core.instrument.Counter;
 import jakarta.annotation.PostConstruct;
 import jakarta.annotation.PreDestroy;
 import java.util.ArrayList;
@@ -25,12 +26,15 @@ public class TgBot implements Bot {
     private final TelegramBot bot;
     private final DefaultUserMessageProcessor userMessageProcessor;
     private final List<Command> commands;
+    private final Counter messageCounter;
 
     public TgBot(
         ApplicationConfig applicationConfig,
         DefaultUserMessageProcessor userMessageProcessor,
-        List<Command> commands
+        List<Command> commands,
+        Counter messageCounter
     ) {
+        this.messageCounter = messageCounter;
         this.bot = new TelegramBot(applicationConfig.telegramToken());
         this.userMessageProcessor = userMessageProcessor;
         this.commands = new ArrayList<>(commands);
@@ -47,6 +51,7 @@ public class TgBot implements Bot {
             for (Update update : updates) {
                 SendMessage sendMessage = userMessageProcessor.process(update);
                 execute(sendMessage);
+                messageCounter.increment();
             }
         }
         return UpdatesListener.CONFIRMED_UPDATES_ALL;

@@ -26,7 +26,10 @@ app:
       name: "updates_dlq"
       partitions: 3
       replicas: 1
-
+  metrics:
+    message-counter:
+      name: "message_counter"
+      description: "Number of messages processed"
 
 spring:
   application:
@@ -61,3 +64,17 @@ bucket4j:
             - capacity: 100
               time: 1
               unit: hours
+
+management:
+  server:
+    port: 8091
+  endpoints:
+    web:
+      base-path: "/"
+      exposure:
+        include: "health,info,prometheus"
+      path-mapping:
+        prometheus: "metrics"
+  metrics:
+    tags:
+      application: ${spring.application.name}

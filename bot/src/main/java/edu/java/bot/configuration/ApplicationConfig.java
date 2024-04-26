@@ -15,8 +15,20 @@ public record ApplicationConfig(
     @NotNull
     Client scrapperClient,
     @NotNull
-    Kafka kafka
+    Kafka kafka,
+    @NotNull
+    Metrics metrics
 ) {
+    public record Metrics(
+        @NotNull MessageCounter messageCounter
+    ) {
+        public record MessageCounter(
+            @NotNull String name,
+            @NotNull String description
+        ) {
+        }
+    }
+
     public record Kafka(
         @NotNull KafkaProducerProperties producer,
         @NotNull KafkaConsumerProperties consumer,

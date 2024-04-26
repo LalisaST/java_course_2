@@ -10,6 +10,7 @@ import edu.java.bot.user.DefaultUserMessageProcessor;
 import java.lang.reflect.Field;
 import java.util.ArrayList;
 import java.util.List;
+import io.micrometer.core.instrument.Counter;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -39,6 +40,9 @@ public class TgBotTest {
     @Mock
     private Command command2;
 
+    @Mock
+    private Counter messageCounter;
+
     private TgBot tgBot;
 
     @BeforeEach
@@ -47,7 +51,7 @@ public class TgBotTest {
 
         when(applicationConfig.telegramToken()).thenReturn("token");
 
-        tgBot = new TgBot(applicationConfig, userMessageProcessor, commands);
+        tgBot = new TgBot(applicationConfig, userMessageProcessor, commands, messageCounter);
 
         Field botField = TgBot.class.getDeclaredField("bot");
         botField.setAccessible(true);
